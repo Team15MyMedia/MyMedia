@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymedia.databinding.FragmentSearchBinding
 
 
@@ -16,6 +17,10 @@ class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
+    private val listAdapter by lazy {
+        SearchRVAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +38,12 @@ class SearchFragment : Fragment() {
     }
 
     private fun initView() = with(binding) {
+        rvPopularTop10.adapter = listAdapter
+        rvPopularTop10.layoutManager = LinearLayoutManager(requireContext())
 
+        val item = com.example.mymedia.data.Data
+        val data = item.getSearchData()
+        listAdapter.addItems(data.toList())
     }
 
     private fun initModel() = with(binding) {

@@ -4,4 +4,5 @@
     <string name="search">검색</string>
     <string name="my_page">내 보관함</string>
     <string name="fragment_search_searchtext">Search for a media</string>
+    <string name="fragment_search_top10">Popular Top 10</string>
 </resources>
