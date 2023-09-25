@@ -73,7 +73,7 @@
             android:id="@+id/videoDescriptionTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="영상 설명을 여기에 표시합니다."
+            android:text="영상 설명을 여기에 표시합니다"
             android:textColor="@color/white" />
     </ScrollView>
 
