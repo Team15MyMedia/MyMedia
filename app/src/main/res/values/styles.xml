@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomSpinnerStyle">
+        <!-- 배경색 변경 -->
+        <item name="android:background">#424242</item>
+        <!-- 드롭다운 아이콘 색상 변경 (필요한 경우) -->
+        <item name="android:popupBackground">#C4C4C4</item>
+        <!-- 선택된 항목 텍스트 색상 변경 -->
+        <item name="android:spinnerItemStyle">@style/CustomSpinnerItemStyle</item>
+    </style>
+
+    <style name="CustomSpinnerItemStyle">
+        <item name="android:textColor">#FFFFFF</item> <!-- 여기에 원하는 텍스트 색상 코드를 지정하세요 -->
+    </style>
+
+</resources>
