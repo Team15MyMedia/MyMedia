@@ -1,31 +1,33 @@
 package com.example.mymedia.search
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mymedia.R
-import com.example.mymedia.databinding.FragmentSearchBinding
-import com.example.mymedia.databinding.FragmentSearchResultBinding
+import com.example.mymedia.databinding.FragmentSearchPopularTop10Binding
 
 
-class SearchFragment : Fragment() {
+class SearchFragmentPopular : Fragment() {
 
     companion object {
-        fun newInstance() = SearchFragment()
+        fun newInstance() = SearchFragmentPopular()
     }
 
-    private var _binding: FragmentSearchBinding? = null
+    private var _binding: FragmentSearchPopularTop10Binding? = null
     private val binding get() = _binding!!
+
+    private val listAdapter by lazy {
+        SearchRVAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchPopularTop10Binding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -36,16 +38,12 @@ class SearchFragment : Fragment() {
     }
 
     private fun initView() = with(binding) {
+        rvPopularTop10.adapter = listAdapter
+        rvPopularTop10.layoutManager = LinearLayoutManager(requireContext())
 
-        imbSearch.setOnClickListener {
-            val fragmentResult = SearchFragmentResult.newInstance()
-            val transaction = requireFragmentManager().beginTransaction()
-
-            transaction.replace(R.id.fragmentContainerView, fragmentResult)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-
+        val item = com.example.mymedia.data.Data
+        val data = item.getSearchData()
+        listAdapter.addItems(data.toList())
     }
 
     private fun initModel() = with(binding) {

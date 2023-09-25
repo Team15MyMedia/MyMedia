@@ -6,26 +6,28 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mymedia.R
-import com.example.mymedia.databinding.FragmentSearchBinding
+import com.example.mymedia.databinding.FragmentSearchPopularTop10Binding
 import com.example.mymedia.databinding.FragmentSearchResultBinding
 
-
-class SearchFragment : Fragment() {
+class SearchFragmentResult : Fragment() {
 
     companion object {
-        fun newInstance() = SearchFragment()
+        fun newInstance() = SearchFragmentResult()
     }
 
-    private var _binding: FragmentSearchBinding? = null
+    private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
+
+    private val listAdapter by lazy {
+        SearchRVAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchResultBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -36,16 +38,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun initView() = with(binding) {
-
-        imbSearch.setOnClickListener {
-            val fragmentResult = SearchFragmentResult.newInstance()
-            val transaction = requireFragmentManager().beginTransaction()
-
-            transaction.replace(R.id.fragmentContainerView, fragmentResult)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
-
     }
 
     private fun initModel() = with(binding) {
