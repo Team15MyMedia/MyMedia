@@ -3,4 +3,10 @@
     <string name="home">홈</string>
     <string name="search">검색</string>
     <string name="my_page">내 보관함</string>
+    <string name="fragment_search_searchtext">Search for a media</string>
+    <string name="fragment_search_top10">Popular Top 10</string>
+    <string name="fragment_search_channel">Channel</string>
+    <string name="fragment_search_videos">Videos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
