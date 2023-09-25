@@ -59,30 +59,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTextView">
 
-        <LinearLayout
+        <!-- 하나의 직접적인 자식인 ConstraintLayout을 추가 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <!-- Spinner -->
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50sp"
                 android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:theme="@style/CustomSpinnerStyle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- RecyclerView for Videos -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/videoRecyclerView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
-            <!-- TextView for Channel -->
             <TextView
                 android:id="@+id/channelTextView"
                 android:layout_width="wrap_content"
@@ -90,18 +89,21 @@
                 android:layout_margin="10sp"
                 android:text="채널"
                 android:textColor="#FFFFFF"
-                android:textSize="25sp" />
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/videoRecyclerView" />
 
-            <!-- RecyclerView for Channels -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/channelRecyclerView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/channelTextView" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
