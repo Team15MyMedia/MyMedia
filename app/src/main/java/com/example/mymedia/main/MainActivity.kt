@@ -12,6 +12,12 @@ class MainActivity : AppCompatActivity() {
     private val viewPager by lazy { binding.viewPager }
     private val tabLayout by lazy { binding.tabLayout }
 
+    private val tabIcon = arrayListOf(
+        R.drawable.ic_unsel_home_bt,
+        R.drawable.ic_unsel_search_bt,
+        R.drawable.ic_unsel_mypage_bt
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
