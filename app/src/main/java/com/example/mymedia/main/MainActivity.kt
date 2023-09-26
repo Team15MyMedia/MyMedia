@@ -22,6 +22,11 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = viewPagerAdapter
         viewPager.offscreenPageLimit = viewPagerAdapter.itemCount
 
+        // 뷰페이저 스와이프 막기
+        viewPager.run {
+            isUserInputEnabled = false
+        }
+
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.setText(viewPagerAdapter.getTitle(position))
         }.attach()
