@@ -2,6 +2,7 @@ package com.example.mymedia.home
 
 import android.R
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymedia.data.Item
 import com.example.mymedia.databinding.FragmentHomeBinding
+import com.example.mymedia.home.adapter.HomeChannelListAdapter
+import com.example.mymedia.home.adapter.HomeVideoListAdapter
 
 
 class HomeFragment : Fragment() {
@@ -22,8 +25,12 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val listAdapter by lazy {
+    private val videoListAdapter by lazy {
         HomeVideoListAdapter()
+    }
+
+    private val channelListAdapter by lazy {
+        HomeChannelListAdapter()
     }
 
     private val homeViewModel by lazy {
@@ -62,18 +69,28 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView() = with(binding) {
-        videoRecyclerView.adapter = listAdapter
-        val layoutManager =
+
+        // videoRecyclerView 설정
+        videoRecyclerView.adapter = videoListAdapter
+        val videoLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        videoRecyclerView.layoutManager = layoutManager
+        videoRecyclerView.layoutManager = videoLayoutManager
+
+        // channelRecyclerView 설정
+        channelRecyclerView.adapter = channelListAdapter
+        val channelLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        channelRecyclerView.layoutManager = channelLayoutManager
 
         // spinner 설정
-        val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, spinnerItems)
-        adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        val spinnerAdapter =
+            ArrayAdapter(requireContext(), R.layout.simple_spinner_item, spinnerItems)
+        spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = spinnerAdapter
 
         // 롱클릭 시
-        listAdapter.setOnItemLongClickListener(object : HomeVideoListAdapter.OnItemLongClickListener {
+        videoListAdapter.setOnItemLongClickListener(object :
+            HomeVideoListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(item: Item) {
                 // 롱클릭 이벤트 처리
                 homeViewModel.showDetail(item)
@@ -82,8 +99,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun initModel() = with(binding) {
-        homeViewModel.search.observe(viewLifecycleOwner) { itemList ->
-            listAdapter.submitList(itemList.toMutableList())
+        homeViewModel.video.observe(viewLifecycleOwner) { itemList ->
+            videoListAdapter.submitList(itemList.toMutableList())
+        }
+        homeViewModel.channel.observe(viewLifecycleOwner) { itemList ->
+            channelListAdapter.submitList(itemList.toMutableList())
         }
     }
 

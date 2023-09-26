@@ -2,16 +2,15 @@ package com.example.mymedia.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.mymedia.data.Item
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymedia.R
+import com.example.mymedia.data.Item
 import com.example.mymedia.databinding.ChannelItemBinding
-import com.example.mymedia.databinding.VideoItemBinding
 
-class HomeVideoListAdapter :
-    ListAdapter<Item, HomeVideoListAdapter.ViewHolder>(
+class HomeChannelListAdapter :
+    ListAdapter<Item, HomeChannelListAdapter.ViewHolder>(
         object : DiffUtil.ItemCallback<Item>() {
             override fun areItemsTheSame(
                 oldItem: Item,
@@ -42,7 +41,7 @@ class HomeVideoListAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            VideoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ChannelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -52,7 +51,7 @@ class HomeVideoListAdapter :
     }
 
     inner class ViewHolder(
-        private val binding: VideoItemBinding,
+        private val binding: ChannelItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Item) {

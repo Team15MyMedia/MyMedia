@@ -1,7 +1,5 @@
 package com.example.mymedia.home
 
-import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,11 +13,17 @@ class HomeViewModel(
 
     private val _video = MutableLiveData<MutableList<Item>>()
 
-    val search: LiveData<MutableList<Item>>
+    val video: LiveData<MutableList<Item>>
         get() = _video
+
+    private val _channel = MutableLiveData<MutableList<Item>>()
+
+    val channel: LiveData<MutableList<Item>>
+        get() = _channel
 
     init {
         _video.value = Data.getSearchData()
+        _channel.value = Data.getSearchData()
     }
 
     fun showDetail(item: Item) {
