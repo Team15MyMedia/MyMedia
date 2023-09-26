@@ -8,9 +8,9 @@ import com.example.mymedia.home.HomeFragment
 import com.example.mymedia.mypage.MyPageFragment
 import com.example.mymedia.search.SearchFragment
 
-class MainViewPagerAdapter(
+class MainViewPagerAdapter (
     fragmentActivity: FragmentActivity
-) : FragmentStateAdapter(fragmentActivity) {
+) : FragmentStateAdapter(fragmentActivity){
 
     private val fragments = ArrayList<MainTabs>()
 
