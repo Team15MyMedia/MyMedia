@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="250sp"
         android:scaleType="centerCrop"
-        android:src="@drawable/img_netflix"
+        android:src="@drawable/_2023_09_25_171503"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
