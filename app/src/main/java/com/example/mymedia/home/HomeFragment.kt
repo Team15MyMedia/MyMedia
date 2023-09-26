@@ -2,7 +2,6 @@ package com.example.mymedia.home
 
 import android.R
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mymedia.data.Item
 import com.example.mymedia.databinding.FragmentHomeBinding
 
 
@@ -71,6 +71,14 @@ class HomeFragment : Fragment() {
         val adapter = ArrayAdapter(requireContext(), R.layout.simple_spinner_item, spinnerItems)
         adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
+
+        // 롱클릭 시
+        listAdapter.setOnItemLongClickListener(object : HomeVideoListAdapter.OnItemLongClickListener {
+            override fun onItemLongClick(item: Item) {
+                // 롱클릭 이벤트 처리
+                homeViewModel.showDetail(item)
+            }
+        })
     }
 
     private fun initModel() = with(binding) {

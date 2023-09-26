@@ -1,5 +1,6 @@
 package com.example.mymedia.home
 
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mymedia.data.Data
 import com.example.mymedia.data.Item
 
-class HomeViewModel() : ViewModel() {
+class HomeViewModel(
+
+) : ViewModel() {
 
     private val _video = MutableLiveData<MutableList<Item>>()
 
@@ -17,6 +20,11 @@ class HomeViewModel() : ViewModel() {
 
     init {
         _video.value = Data.getSearchData()
+    }
+
+    fun showDetail(item: Item) {
+//        val intent = Intent( , YourActivity::class.java)
+//        context.startActivity(intent)
     }
 }
 
