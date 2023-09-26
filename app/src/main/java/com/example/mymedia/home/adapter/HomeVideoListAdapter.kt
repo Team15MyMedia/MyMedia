@@ -2,35 +2,34 @@ package com.example.mymedia.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.mymedia.data.Item
+import com.example.mymedia.data.VideoItem
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymedia.R
-import com.example.mymedia.databinding.ChannelItemBinding
 import com.example.mymedia.databinding.VideoItemBinding
 
 class HomeVideoListAdapter :
-    ListAdapter<Item, HomeVideoListAdapter.ViewHolder>(
-        object : DiffUtil.ItemCallback<Item>() {
+    ListAdapter<VideoItem, HomeVideoListAdapter.ViewHolder>(
+        object : DiffUtil.ItemCallback<VideoItem>() {
             override fun areItemsTheSame(
-                oldItem: Item,
-                newItem: Item
+                oldVideoItem: VideoItem,
+                newVideoItem: VideoItem
             ): Boolean {
-                return oldItem.id == newItem.id
+                return oldVideoItem.id == newVideoItem.id
             }
 
             override fun areContentsTheSame(
-                oldItem: Item,
-                newItem: Item
+                oldVideoItem: VideoItem,
+                newVideoItem: VideoItem
             ): Boolean {
-                return oldItem == newItem
+                return oldVideoItem == newVideoItem
             }
         }) {
 
     // 롱클릭 리스너 인터페이스 정의
     interface OnItemLongClickListener {
-        fun onItemLongClick(item: Item)
+        fun onItemLongClick(videoItem: VideoItem)
     }
 
     private var onItemLongClickListener: OnItemLongClickListener? = null
@@ -55,13 +54,13 @@ class HomeVideoListAdapter :
         private val binding: VideoItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Item) {
+        fun bind(videoItem: VideoItem) {
             with(binding) {
                 posterImageView.setImageResource(R.drawable._2023_09_25_171503)
                 posterImageView.clipToOutline = true
 
                 itemView.setOnLongClickListener {
-                    onItemLongClickListener?.onItemLongClick(item)
+                    onItemLongClickListener?.onItemLongClick(videoItem)
                     true
                 }
             }

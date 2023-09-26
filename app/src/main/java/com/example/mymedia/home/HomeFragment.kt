@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mymedia.data.Item
+import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
 import com.example.mymedia.home.adapter.HomeVideoListAdapter
@@ -119,9 +119,9 @@ class HomeFragment : Fragment() {
         // 롱클릭 시
         videoListAdapter.setOnItemLongClickListener(object :
             HomeVideoListAdapter.OnItemLongClickListener {
-            override fun onItemLongClick(item: Item) {
+            override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
-                homeViewModel.showDetail(item)
+                homeViewModel.showDetail(videoItem)
             }
         })
     }

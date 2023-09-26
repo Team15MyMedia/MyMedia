@@ -5,8 +5,8 @@ import java.util.Date
 import kotlin.random.Random
 
 object Data {
-    private val searchData: MutableList<Item> = mutableListOf()
-    private val bookmarkData: MutableList<Item> = mutableListOf()
+    private val searchData: MutableList<VideoItem> = mutableListOf()
+    private val bookmarkData: MutableList<VideoItem> = mutableListOf()
 
     init {
         searchData.apply {
@@ -17,28 +17,28 @@ object Data {
         }
     }
 
-    fun getSearchData(): MutableList<Item> {
+    fun getSearchData(): MutableList<VideoItem> {
         return searchData
     }
 
-    fun removeSearchItem(item: Item) {
-        searchData.remove(item)
+    fun removeSearchItem(videoItem: VideoItem) {
+        searchData.remove(videoItem)
     }
 
-    fun addSearchItem(item: Item) {
-        searchData.add(item)
+    fun addSearchItem(videoItem: VideoItem) {
+        searchData.add(videoItem)
     }
 
-    fun getBookmarkData(): MutableList<Item> {
+    fun getBookmarkData(): MutableList<VideoItem> {
         return bookmarkData
     }
 
-    fun removeBookmarkItem(item: Item) {
-        bookmarkData.remove(item)
+    fun removeBookmarkItem(videoItem: VideoItem) {
+        bookmarkData.remove(videoItem)
     }
 
-    fun addBookmarkItem(item: Item) {
-        bookmarkData.add(item)
+    fun addBookmarkItem(videoItem: VideoItem) {
+        bookmarkData.add(videoItem)
     }
 
 
@@ -54,7 +54,7 @@ object Data {
     }
 
     // 임의의 데이터를 생성하는 함수
-    fun generateRandomData(): Item {
+    fun generateRandomData(): VideoItem {
         val randomId = Random.nextInt(1, 100)
         val randomTitle = "Item $randomId"
         val randomUrl = "https://example.com/item/$randomId"
@@ -62,6 +62,6 @@ object Data {
         val randomThumbnail = "https://example.com/thumbnail/$randomId.jpg"
         val randomIsFavorite = Random.nextBoolean()
 
-        return Item(randomId, randomTitle, randomUrl, randomDatetime, randomThumbnail, randomIsFavorite)
+        return VideoItem("", randomTitle, randomUrl, randomDatetime, randomThumbnail, randomIsFavorite)
     }
 }

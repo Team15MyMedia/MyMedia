@@ -5,20 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.mymedia.data.Data
-import com.example.mymedia.data.Item
+import com.example.mymedia.data.VideoItem
 
 class HomeViewModel(
 
 ) : ViewModel() {
 
-    private val _video = MutableLiveData<MutableList<Item>>()
+    private val _video = MutableLiveData<MutableList<VideoItem>>()
 
-    val video: LiveData<MutableList<Item>>
+    val video: LiveData<MutableList<VideoItem>>
         get() = _video
 
-    private val _channel = MutableLiveData<MutableList<Item>>()
+    private val _channel = MutableLiveData<MutableList<VideoItem>>()
 
-    val channel: LiveData<MutableList<Item>>
+    val channel: LiveData<MutableList<VideoItem>>
         get() = _channel
 
     init {
@@ -26,7 +26,7 @@ class HomeViewModel(
         _channel.value = Data.getSearchData()
     }
 
-    fun showDetail(item: Item) {
+    fun showDetail(videoItem: VideoItem) {
 //        val intent = Intent( , YourActivity::class.java)
 //        context.startActivity(intent)
     }

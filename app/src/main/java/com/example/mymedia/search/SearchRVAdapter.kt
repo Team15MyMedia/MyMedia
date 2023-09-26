@@ -2,19 +2,18 @@ package com.example.mymedia.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mymedia.data.Item
+import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.RvSearchItemBinding
 
 
 class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.ViewHolder>() {
 
-    private val list = ArrayList<Item>()
+    private val list = ArrayList<VideoItem>()
 
-    fun addItems(items: List<Item>) {
-        list.addAll(items)
+    fun addItems(videoItems: List<VideoItem>) {
+        list.addAll(videoItems)
         notifyDataSetChanged()
     }
 
@@ -37,7 +36,7 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.ViewHolder>() {
         private val binding: RvSearchItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Item) = with(binding) {
+        fun bind(videoItem: VideoItem) = with(binding) {
 
 //            Glide.with(root.context)
 //                .load(item.url)
@@ -48,7 +47,7 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.ViewHolder>() {
                 .into(ivMedia)
 
 
-            tvTitle.text = item.title
+            tvTitle.text = videoItem.title
         }
     }
 
