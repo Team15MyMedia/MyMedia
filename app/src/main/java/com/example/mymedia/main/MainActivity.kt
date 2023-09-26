@@ -2,7 +2,6 @@ package com.example.mymedia.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.viewpager2.widget.ViewPager2
 import com.example.mymedia.R
 import com.example.mymedia.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
@@ -24,7 +23,13 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = adapter.itemCount
 
-        // TabLayout과 ViewPager2 연결
+
+        // 뷰페이저 스와이프 막기
+        viewPager.run {
+            isUserInputEnabled = false
+        }
+
+
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "홈"
