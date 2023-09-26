@@ -21,9 +21,14 @@ class HomeViewModel(
     val channel: LiveData<MutableList<VideoItem>>
         get() = _channel
 
+    private val _most = MutableLiveData<MutableList<VideoItem>>()
+    val most: LiveData<MutableList<VideoItem>>
+        get() = _most
+
     init {
         _video.value = Data.getSearchData()
         _channel.value = Data.getSearchData()
+        _most.value = Data.getSearchData()
     }
 
     fun showDetail(videoItem: VideoItem) {
