@@ -19,8 +19,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "KAKAO_REST_API_KEY", properties["api_key"]
-        buildConfigField "String", "KAKAO_BASE_URL", properties["base_url"]
+        buildConfigField "String", "YOUTUBE_API_KEY", properties["api_key"]
+        buildConfigField "String", "YOUTUBE_BASE_URL", properties["base_url"]
     }
 
     buildFeatures {

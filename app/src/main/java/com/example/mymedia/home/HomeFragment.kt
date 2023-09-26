@@ -14,9 +14,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
+import com.example.mymedia.home.adapter.HomeMostViewListAdapter
 import com.example.mymedia.home.adapter.HomeVideoListAdapter
 
 
@@ -37,9 +39,13 @@ class HomeFragment : Fragment() {
         HomeChannelListAdapter()
     }
 
+    private val mostListAdapter by lazy {
+        HomeMostViewListAdapter()
+    }
+
     private val homeViewModel by lazy {
         ViewModelProvider(
-            this
+            this, SearchViewModelFactory(ItemRepository())
         )[HomeViewModel::class.java]
     }
 
@@ -82,6 +88,12 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         channelRecyclerView.layoutManager = channelLayoutManager
 
+        // mostRecyclerView 설정
+        mostRecyclerView.adapter = mostListAdapter
+        val mostLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        mostRecyclerView.layoutManager = mostLayoutManager
+
         // spinner 설정
         val spinnerAdapter = object :
             ArrayAdapter<String>(requireContext(), R.layout.simple_spinner_item, spinnerItems) {
@@ -105,12 +117,16 @@ class HomeFragment : Fragment() {
                 return view
             }
         }
-        spinner.background.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white), PorterDuff.Mode.SRC_ATOP)
+        spinner.background.setColorFilter(
+            ContextCompat.getColor(requireContext(), R.color.white),
+            PorterDuff.Mode.SRC_ATOP
+        )
         spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 (adapterView.getChildAt(0) as TextView).setTextColor(Color.WHITE)
+
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
@@ -122,6 +138,16 @@ class HomeFragment : Fragment() {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
                 homeViewModel.showDetail(videoItem)
+                homeViewModel.searchCategoryVideo()
+            }
+        })
+
+        // test
+        mostListAdapter.setOnItemLongClickListener(object :
+            HomeMostViewListAdapter.OnItemLongClickListener {
+            override fun onItemLongClick(videoItem: VideoItem) {
+                // 롱클릭 이벤트 처리
+                homeViewModel.searchMostVideo()
             }
         })
     }
@@ -132,6 +158,9 @@ class HomeFragment : Fragment() {
         }
         homeViewModel.channel.observe(viewLifecycleOwner) { itemList ->
             channelListAdapter.submitList(itemList.toMutableList())
+        }
+        homeViewModel.most.observe(viewLifecycleOwner) { itemList ->
+            mostListAdapter.submitList(itemList.toMutableList())
         }
     }
 

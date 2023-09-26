@@ -10,8 +10,8 @@ import com.bumptech.glide.Glide
 import com.example.mymedia.R
 import com.example.mymedia.databinding.VideoItemBinding
 
-class HomeVideoListAdapter :
-    ListAdapter<VideoItem, HomeVideoListAdapter.ViewHolder>(
+class HomeMostViewListAdapter :
+    ListAdapter<VideoItem, HomeMostViewListAdapter.ViewHolder>(
         object : DiffUtil.ItemCallback<VideoItem>() {
             override fun areItemsTheSame(
                 oldVideoItem: VideoItem,
@@ -57,6 +57,7 @@ class HomeVideoListAdapter :
 
         fun bind(videoItem: VideoItem) {
             with(binding) {
+                // 이미지 설정
                 Glide.with(itemView.context)
                     .load(videoItem.thumbnail)
                     .into(posterImageView)
