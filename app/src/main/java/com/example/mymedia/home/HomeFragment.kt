@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
+import com.example.mymedia.home.adapter.HomeMostViewListAdapter
 import com.example.mymedia.home.adapter.HomeVideoListAdapter
 
 
@@ -35,6 +36,10 @@ class HomeFragment : Fragment() {
 
     private val channelListAdapter by lazy {
         HomeChannelListAdapter()
+    }
+
+    private val mostListAdapter by lazy {
+        HomeMostViewListAdapter()
     }
 
     private val homeViewModel by lazy {
@@ -82,6 +87,12 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         channelRecyclerView.layoutManager = channelLayoutManager
 
+        // mostRecyclerView 설정
+        mostRecyclerView.adapter = mostListAdapter
+        val mostLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        mostRecyclerView.layoutManager = mostLayoutManager
+
         // spinner 설정
         val spinnerAdapter = object :
             ArrayAdapter<String>(requireContext(), R.layout.simple_spinner_item, spinnerItems) {
@@ -105,7 +116,10 @@ class HomeFragment : Fragment() {
                 return view
             }
         }
-        spinner.background.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white), PorterDuff.Mode.SRC_ATOP)
+        spinner.background.setColorFilter(
+            ContextCompat.getColor(requireContext(), R.color.white),
+            PorterDuff.Mode.SRC_ATOP
+        )
         spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -132,6 +146,9 @@ class HomeFragment : Fragment() {
         }
         homeViewModel.channel.observe(viewLifecycleOwner) { itemList ->
             channelListAdapter.submitList(itemList.toMutableList())
+        }
+        homeViewModel.most.observe(viewLifecycleOwner) { itemList ->
+            mostListAdapter.submitList(itemList.toMutableList())
         }
     }
 
