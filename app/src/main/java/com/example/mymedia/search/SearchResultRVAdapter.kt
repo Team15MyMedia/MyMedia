@@ -4,16 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mymedia.data.Item
+import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.RvChannelItemBinding
 import com.example.mymedia.databinding.RvVideosItemBinding
 
 class SearchResultRVAdapter(val type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val list = ArrayList<Item>()
+    private val list = ArrayList<VideoItem>()
 
-    fun addItems(items: List<Item>) {
-        list.addAll(items)
+    fun addItems(videoItems: List<VideoItem>) {
+        list.addAll(videoItems)
         notifyDataSetChanged()
     }
 
@@ -62,7 +62,7 @@ class SearchResultRVAdapter(val type: Int) : RecyclerView.Adapter<RecyclerView.V
 
     class ChannelViewHolder(private val binding: RvChannelItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindChannel(item: Item) = with(binding) {
+        fun bindChannel(videoItem: VideoItem) = with(binding) {
 
             Glide.with(root.context)
                 .load("https://i.pinimg.com/236x/f4/13/d0/f413d09e8b1b08b0138f63c033dd9237.jpg")
@@ -72,7 +72,7 @@ class SearchResultRVAdapter(val type: Int) : RecyclerView.Adapter<RecyclerView.V
 
     class VideosViewHolder(private val binding: RvVideosItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindVideos(item: Item) = with(binding) {
+        fun bindVideos(videoItem: VideoItem) = with(binding) {
 
             Glide.with(root.context)
                 .load("https://i.pinimg.com/236x/f4/13/d0/f413d09e8b1b08b0138f63c033dd9237.jpg")
