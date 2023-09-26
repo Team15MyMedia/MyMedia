@@ -1,10 +1,12 @@
 package com.example.mymedia.search
 
+import android.app.appsearch.SearchResult
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymedia.databinding.FragmentSearchPopularTop10Binding
 import com.example.mymedia.databinding.FragmentSearchResultBinding
@@ -18,8 +20,15 @@ class SearchFragmentResult : Fragment() {
     private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
 
-    private val listAdapter by lazy {
-        SearchRVAdapter()
+    private val CHANNEL_VIEW_TYPE = 1
+    private val VIDEOS_VIEW_TYPE = 2
+
+    private val channelListAdapter by lazy {
+        SearchResultRVAdapter(CHANNEL_VIEW_TYPE)
+    }
+
+    private val videosListAdapter by lazy {
+        SearchResultRVAdapter(VIDEOS_VIEW_TYPE)
     }
 
     override fun onCreateView(
@@ -38,6 +47,25 @@ class SearchFragmentResult : Fragment() {
     }
 
     private fun initView() = with(binding) {
+
+        //channel recyclerview
+        rvChannel.adapter = channelListAdapter
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        rvChannel.layoutManager = layoutManager
+
+
+        //videos recyclerview
+        rvVideos.adapter = videosListAdapter
+        rvVideos.layoutManager = GridLayoutManager(requireContext(), 3)
+
+
+        //데이터 연결
+        val item = com.example.mymedia.data.Data
+        val data = item.getSearchData()
+        channelListAdapter.addItems(data.toList())
+        videosListAdapter.addItems(data.toList())
+
     }
 
     private fun initModel() = with(binding) {

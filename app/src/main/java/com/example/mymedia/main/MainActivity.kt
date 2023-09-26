@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private fun initView() = with(binding) {
         viewPager.adapter = viewPagerAdapter
         viewPager.offscreenPageLimit = viewPagerAdapter.itemCount
+        viewPager.setUserInputEnabled(false);
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.setText(viewPagerAdapter.getTitle(position))
