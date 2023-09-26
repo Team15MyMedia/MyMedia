@@ -20,6 +20,10 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
+    private val searchResultFragment by lazy {
+        SearchFragmentResult.newInstance()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,7 +42,8 @@ class SearchFragment : Fragment() {
     private fun initView() = with(binding) {
 
         imbSearch.setOnClickListener {
-            val fragmentResult = SearchFragmentResult.newInstance()
+
+            val fragmentResult = searchResultFragment
             val transaction = requireFragmentManager().beginTransaction()
 
             transaction.replace(R.id.fragmentContainerView, fragmentResult)
