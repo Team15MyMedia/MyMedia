@@ -56,7 +56,8 @@ class HomeChannelListAdapter :
 
         fun bind(item: Item) {
             with(binding) {
-                posterImageView.setImageResource(R.drawable._2023_09_25_171503)
+                channelImageView.setImageResource(R.drawable._2023_09_25_171503)
+                channelImageView.clipToOutline = true
 
                 itemView.setOnLongClickListener {
                     onItemLongClickListener?.onItemLongClick(item)
