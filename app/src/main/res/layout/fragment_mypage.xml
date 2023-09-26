@@ -55,7 +55,7 @@
         android:focusableInTouchMode="true" />
 
     <TextView
-        android:id="@+id/edy_myfavoritevideos"
+        android:id="@+id/edt_myfavoritevideos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="My Favorite Videos"
@@ -117,15 +117,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txt_home"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <Button
+        android:id="@+id/btn_home"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:text="Home"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="716dp"
-        android:layout_marginLeft="40dp"
-        android:textSize="8sp" />
+        android:backgroundTint="@drawable/background_color1"
+        android:layout_marginTop="700dp"
+        android:layout_marginRight="319dp"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_search"
@@ -138,15 +141,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txt_search"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:text="Search"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="716dp"
-        android:layout_marginLeft="197dp"
-        android:textSize="8sp" />
+        android:backgroundTint="@drawable/background_color1"
+        android:layout_marginTop="700dp"
+        android:layout_marginRight="158dp"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_mypage"
@@ -159,14 +165,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txt_mypage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="My Page"
+    <Button
+        android:id="@+id/btn_mypage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="MyPage"
         android:textColor="#FFFFFF"
-        android:layout_marginTop="716dp"
-        android:layout_marginLeft="346dp"
-        android:textSize="8sp" />
+        android:backgroundTint="@drawable/background_color1"
+        android:layout_marginTop="700dp"
+        android:layout_marginRight="8dp"
+        android:textSize="8sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
