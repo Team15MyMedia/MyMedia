@@ -75,15 +75,15 @@ class MainActivity : AppCompatActivity() {
         // 선택된 탭의 아이콘 및 텍스트 업데이트
         when (position) {
             0 -> {
-                tab.setIcon(if (isSelected) R.drawable.ic_sel_home_bt else R.drawable.group_51)
+                tab.setIcon(if (isSelected) R.drawable.ic_sel_home_bt else R.drawable.ic_unsel_home_bt)
                 tab.text = if (isSelected) "홈" else "홈"
             }
             1 -> {
-                tab.setIcon(if (isSelected) R.drawable.ic_sel_search_bt else R.drawable.group_48_1)
+                tab.setIcon(if (isSelected) R.drawable.ic_unsel_search_bt2 else R.drawable.ic_unsel_search_bt)
                 tab.text = if (isSelected) "검색" else "검색"
             }
             2 -> {
-                tab.setIcon(if (isSelected) R.drawable.ic_sel_mypage_bt else R.drawable.group_3)
+                tab.setIcon(if (isSelected) R.drawable.ic_sel_mypage_bt else R.drawable.ic_unsel_mypage_bt)
                 tab.text = if (isSelected) "마이 페이지" else "마이 페이지"
             }
         }
