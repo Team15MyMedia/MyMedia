@@ -1,12 +1,16 @@
 package com.example.mymedia.home
 
 import android.R
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,16 +45,13 @@ class HomeFragment : Fragment() {
 
     // test Data
     val spinnerItems: MutableList<String> = mutableListOf(
-        "항목 1",
-        "항목 2",
-        "항목 3",
-        "항목 4",
-        "항목 5",
-        "항목 6",
-        "항목 7",
-        "항목 8",
-        "항목 9",
-        "항목 10"
+        "게임",
+        "영화",
+        "뉴스",
+        "음악",
+        "실시간",
+        "피트니스",
+        "최근에 업로드 된 영상",
     )
 
     override fun onCreateView(
@@ -69,7 +70,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView() = with(binding) {
-
         // videoRecyclerView 설정
         videoRecyclerView.adapter = videoListAdapter
         val videoLayoutManager =
@@ -83,10 +83,38 @@ class HomeFragment : Fragment() {
         channelRecyclerView.layoutManager = channelLayoutManager
 
         // spinner 설정
-        val spinnerAdapter =
-            ArrayAdapter(requireContext(), R.layout.simple_spinner_item, spinnerItems)
+        val spinnerAdapter = object :
+            ArrayAdapter<String>(requireContext(), R.layout.simple_spinner_item, spinnerItems) {
+            override fun getDropDownView(
+                position: Int,
+                convertView: View?,
+                parent: ViewGroup
+            ): View {
+                val view = super.getDropDownView(position, convertView, parent)
+                val text = view.findViewById<TextView>(R.id.text1)
+                text.textSize = 25F
+                text.setTextColor(Color.WHITE)
+                return view
+            }
+
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                val text = view.findViewById<TextView>(R.id.text1)
+                text.textSize = 25F
+                text.setTextColor(Color.WHITE)
+                return view
+            }
+        }
+        spinner.background.setColorFilter(ContextCompat.getColor(requireContext(), R.color.white), PorterDuff.Mode.SRC_ATOP)
         spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerAdapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+                (adapterView.getChildAt(0) as TextView).setTextColor(Color.WHITE)
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+        }
 
         // 롱클릭 시
         videoListAdapter.setOnItemLongClickListener(object :

@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50sp"
                 android:layout_marginStart="8dp"
-                android:theme="@style/CustomSpinnerStyle"
+                android:popupBackground="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
