@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
@@ -44,7 +45,7 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel by lazy {
         ViewModelProvider(
-            this
+            this, SearchViewModelFactory(ItemRepository())
         )[HomeViewModel::class.java]
     }
 
@@ -125,6 +126,7 @@ class HomeFragment : Fragment() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
                 (adapterView.getChildAt(0) as TextView).setTextColor(Color.WHITE)
+
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
@@ -136,6 +138,16 @@ class HomeFragment : Fragment() {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
                 homeViewModel.showDetail(videoItem)
+                homeViewModel.searchCategoryVideo()
+            }
+        })
+
+        // test
+        mostListAdapter.setOnItemLongClickListener(object :
+            HomeMostViewListAdapter.OnItemLongClickListener {
+            override fun onItemLongClick(videoItem: VideoItem) {
+                // 롱클릭 이벤트 처리
+                homeViewModel.searchMostVideo()
             }
         })
     }
