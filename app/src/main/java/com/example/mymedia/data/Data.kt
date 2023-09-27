@@ -1,13 +1,12 @@
 package com.example.mymedia.data
 
-import retrofit2.Response
-import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.random.Random
 
 object Data {
     private val searchData: MutableList<VideoItem> = mutableListOf()
     private val bookmarkData: MutableList<VideoItem> = mutableListOf()
+    private val mediaData: MutableList<MediaItem> = mutableListOf()
 
     init {
         searchData.add(
@@ -22,14 +21,26 @@ object Data {
         )
         searchData.apply {
             repeat(10) {
-                val randomItem = generateRandomData()
+                val randomItem = generateRandomVideoData()
                 add(randomItem)
+            }
+        }
+        mediaData.apply {
+            repeat(5) {
+                val randomChannelItem = generateRandomChannelData()
+                add(randomChannelItem)
+                val randomVideoItem = generateRandomVideoData()
+                add(randomVideoItem)
             }
         }
     }
 
     fun getSearchData(): MutableList<VideoItem> {
         return searchData
+    }
+
+    fun getMediaData(): MutableList<MediaItem> {
+        return mediaData
     }
 
     fun removeSearchItem(videoItem: VideoItem) {
@@ -62,7 +73,7 @@ object Data {
 
 
     // 임의의 데이터를 생성하는 함수
-    private fun generateRandomData(): VideoItem {
+    private fun generateRandomVideoData(): VideoItem {
         val randomId = Random.nextInt(1, 100)
         val randomTitle = "Item $randomId"
         val randomUrl = "https://example.com/item/$randomId"
@@ -71,6 +82,24 @@ object Data {
         val randomIsFavorite = Random.nextBoolean()
 
         return VideoItem(
+            "",
+            randomTitle,
+            randomUrl,
+            randomDatetime,
+            randomThumbnail,
+            randomIsFavorite
+        )
+    }
+
+    private fun generateRandomChannelData(): ChannelItem {
+        val randomId = Random.nextInt(1, 100)
+        val randomTitle = "Item $randomId"
+        val randomUrl = "https://example.com/item/$randomId"
+        val randomDatetime = getCurrentDateTime()
+        val randomThumbnail = "https://example.com/thumbnail/$randomId.jpg"
+        val randomIsFavorite = Random.nextBoolean()
+
+        return ChannelItem(
             "",
             randomTitle,
             randomUrl,
