@@ -14,6 +14,14 @@ class ItemRepository {
         }
     }
 
+    suspend fun findChannelByID(channelId: String): Response<ChannelItem> {
+        return fetchChannel {
+            RetrofitInstance.api.getChannel(
+                id = channelId
+            )
+        }
+    }
+
     suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
         return fetchItemList {
             RetrofitInstance.api.searchMostPopularVideos(
@@ -145,6 +153,37 @@ class ItemRepository {
                 categoryList.add(category)
             }
             return Response.success(categoryList)
+        } else {
+            return Response.error(response.code(), response.errorBody())
+        }
+    }
+
+    private inline fun fetchChannel(
+        fetchFunction: () -> Response<ApiResponse<NoneSearchItem>>
+    ): Response<ChannelItem> {
+        val response = fetchFunction()
+
+        if (response.isSuccessful) {
+            val videoResponse = response.body()
+            var item: ChannelItem? = null
+
+            videoResponse?.items?.forEach { items ->
+                // 날짜 변환
+                val dateString = items.snippet?.publishedAt ?: ""
+                val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                val date = stringToDate(dateString, dateFormat) ?: Date()
+
+                item = ChannelItem(
+                    id = items.id ?: "",
+                    title = items.snippet?.title ?: "none-title",
+                    description = items.snippet?.description ?: "",
+                    datetime = date,
+                    thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
+                    isFavorite = false,
+                )
+            }
+
+            return Response.success(item)
         } else {
             return Response.error(response.code(), response.errorBody())
         }
