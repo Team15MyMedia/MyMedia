@@ -1,5 +1,6 @@
 package com.example.mymedia.data
 
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.random.Random
@@ -9,6 +10,16 @@ object Data {
     private val bookmarkData: MutableList<VideoItem> = mutableListOf()
 
     init {
+        searchData.add(
+            VideoItem(
+                "",
+                "",
+                "",
+                Date(),
+                "https://i.ytimg.com/vi/n3wr3IOO4N8/default.jpg",
+                false
+            )
+        )
         searchData.apply {
             repeat(10) {
                 val randomItem = generateRandomData()
@@ -43,18 +54,15 @@ object Data {
 
 
     // 현재 시각을 가져오는 함수
-    fun getCurrentDateTime(): Date {
+    private fun getCurrentDateTime(): Date {
         return Date()
     }
 
     // 날짜 포맷을 지정하는 함수
-    fun formatDate(date: Date): String {
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        return format.format(date)
-    }
+
 
     // 임의의 데이터를 생성하는 함수
-    fun generateRandomData(): VideoItem {
+    private fun generateRandomData(): VideoItem {
         val randomId = Random.nextInt(1, 100)
         val randomTitle = "Item $randomId"
         val randomUrl = "https://example.com/item/$randomId"
@@ -62,6 +70,13 @@ object Data {
         val randomThumbnail = "https://example.com/thumbnail/$randomId.jpg"
         val randomIsFavorite = Random.nextBoolean()
 
-        return VideoItem("", randomTitle, randomUrl, randomDatetime, randomThumbnail, randomIsFavorite)
+        return VideoItem(
+            "",
+            randomTitle,
+            randomUrl,
+            randomDatetime,
+            randomThumbnail,
+            randomIsFavorite
+        )
     }
 }

@@ -6,6 +6,7 @@ import com.example.mymedia.data.VideoItem
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.mymedia.R
 import com.example.mymedia.databinding.VideoItemBinding
 
@@ -56,7 +57,9 @@ class HomeVideoListAdapter :
 
         fun bind(videoItem: VideoItem) {
             with(binding) {
-                posterImageView.setImageResource(R.drawable._2023_09_25_171503)
+                Glide.with(itemView.context)
+                    .load(videoItem.thumbnail)
+                    .into(posterImageView)
                 posterImageView.clipToOutline = true
 
                 itemView.setOnLongClickListener {

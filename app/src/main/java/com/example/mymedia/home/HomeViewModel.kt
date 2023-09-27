@@ -1,14 +1,18 @@
 package com.example.mymedia.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.mymedia.data.Data
+import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
-
+    private val repository: ItemRepository,
 ) : ViewModel() {
 
     private val _video = MutableLiveData<MutableList<VideoItem>>()
@@ -35,12 +39,46 @@ class HomeViewModel(
 //        val intent = Intent( , YourActivity::class.java)
 //        context.startActivity(intent)
     }
+
+    fun searchMostVideo() {
+        viewModelScope.launch {
+            val list = mutableListOf<VideoItem>()
+            // Video
+            val responseVideo = repository.findMostVideo()
+            if (responseVideo.isSuccessful) {
+                val itemList = responseVideo.body() ?: mutableListOf()
+                list.addAll(itemList)
+            } else {
+                // null일 시 공백 리스트 생성
+                _most.value = mutableListOf()
+            }
+            _most.value = list
+        }
+    }
+
+    fun searchCategoryVideo() {
+        viewModelScope.launch {
+            val list = mutableListOf<VideoItem>()
+            // Video
+            val responseVideo = repository.findVideoByCategory()
+            if (responseVideo.isSuccessful) {
+                val itemList = responseVideo.body() ?: mutableListOf()
+                list.addAll(itemList)
+            } else {
+                // null일 시 공백 리스트 생성
+                _video.value = mutableListOf()
+            }
+            _video.value = list
+        }
+    }
 }
 
-class SearchViewModelFactory() : ViewModelProvider.Factory {
+class SearchViewModelFactory(
+    private val repository: ItemRepository,
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            return HomeViewModel() as T
+            return HomeViewModel(repository) as T
         } else {
             throw IllegalArgumentException("Not found ViewModel class.")
         }
