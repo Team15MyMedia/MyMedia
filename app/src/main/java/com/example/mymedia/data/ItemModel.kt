@@ -2,23 +2,33 @@ package com.example.mymedia.data
 
 import java.util.Date
 
+sealed class MediaItem {
+    abstract val id: String
+    abstract val title: String
+    abstract val description: String
+    abstract val datetime: Date
+    abstract val thumbnail: String
+    abstract var isFavorite: Boolean
+}
+
 data class VideoItem(
-    val id: String,
-    val title: String,
-    val description : String,
-    val datetime: Date,
-    val thumbnail: String,
-    var isFavorite: Boolean,
-)
+    override val id: String,
+    override val title: String,
+    override val description: String,
+    override val datetime: Date,
+    override val thumbnail: String,
+    override var isFavorite: Boolean
+) : MediaItem()
 
 data class ChannelItem(
-    val id: String,
-    val title: String,
-    val description : String,
-    val datetime: Date,
-    val thumbnail: String,
-    var isFavorite: Boolean,
-)
+    override val id: String,
+    override val title: String,
+    override val description: String,
+    override val datetime: Date,
+    override val thumbnail: String,
+    override var isFavorite: Boolean
+) : MediaItem()
+
 
 
 //id : String
