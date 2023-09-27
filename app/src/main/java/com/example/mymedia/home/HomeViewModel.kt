@@ -1,5 +1,7 @@
 package com.example.mymedia.home
 
+import android.content.Context
+import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +12,7 @@ import com.example.mymedia.data.Data
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.MediaItem
 import com.example.mymedia.data.VideoItem
+import com.example.mymedia.detail.DetailActivity
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -36,9 +39,13 @@ class HomeViewModel(
         _most.value = Data.getSearchData()
     }
 
-    fun showDetail(videoItem: VideoItem) {
-//        val intent = Intent( , YourActivity::class.java)
-//        context.startActivity(intent)
+    fun showDetail(videoItem: VideoItem, context: Context) {
+        val intent = Intent(context, DetailActivity::class.java)
+        intent.putExtra("videoThumbnail", videoItem.thumbnail)
+        intent.putExtra("videoTitle", videoItem.title)
+        intent.putExtra("videoDescription", videoItem.description)
+
+        context.startActivity(intent)
     }
 
     fun searchMostVideo() {
