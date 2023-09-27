@@ -15,6 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mymedia.data.Category
+import com.example.mymedia.data.CategoryItem
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
@@ -51,15 +53,19 @@ class HomeFragment : Fragment() {
     }
 
     // test Data
-    val spinnerItems: MutableList<String> = mutableListOf(
-        "게임",
-        "영화",
-        "뉴스",
-        "음악",
-        "실시간",
-        "피트니스",
-        "최근에 업로드 된 영상",
+    private val categories: MutableList<Category> = mutableListOf(
+        Category("0", "게임"),
+        Category("1", "영화"),
+        Category("2", "뉴스"),
+        Category("3", "음악"),
+        Category("4", "실시간"),
+        Category("5", "피트니스"),
+        Category("6", "최근에 업로드 된 영상")
     )
+
+    // 두 번째 값만 추출한 배열
+    private val spinnerItems: Array<String> = categories.map { it.title }.toTypedArray()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,8 +102,38 @@ class HomeFragment : Fragment() {
         mostRecyclerView.layoutManager = mostLayoutManager
 
         // spinner 설정
+        setSpinner(spinnerItems)
+
+        // 롱클릭 시
+        categoryVideoListAdapter.setOnItemLongClickListener(object :
+            HomeCategoryVideoListAdapter.OnItemLongClickListener {
+            override fun onItemLongClick(videoItem: VideoItem) {
+                // 롱클릭 이벤트 처리
+//                homeViewModel.showDetail(videoItem)
+                homeViewModel.searchByCategory()
+                homeViewModel.getCategoryList()
+            }
+        })
+    }
+
+    private fun initModel() = with(binding) {
+        homeViewModel.categoryVideo.observe(viewLifecycleOwner) { itemList ->
+            categoryVideoListAdapter.submitList(itemList.toMutableList())
+        }
+        homeViewModel.categoryChannel.observe(viewLifecycleOwner) { itemList ->
+            channelListAdapter.submitList(itemList.toMutableList())
+        }
+        homeViewModel.most.observe(viewLifecycleOwner) { itemList ->
+            mostListAdapter.submitList(itemList.toMutableList())
+        }
+        homeViewModel.categoryList.observe(viewLifecycleOwner) { itemList ->
+            setSpinner(itemList.map { it.title }.toTypedArray())
+        }
+    }
+
+    private fun setSpinner(list: Array<String>) = with(binding) {
         val spinnerAdapter = object :
-            ArrayAdapter<String>(requireContext(), R.layout.simple_spinner_item, spinnerItems) {
+            ArrayAdapter<String>(requireContext(), R.layout.simple_spinner_item, list) {
             override fun getDropDownView(
                 position: Int,
                 convertView: View?,
@@ -131,36 +167,6 @@ class HomeFragment : Fragment() {
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
-        }
-
-        // 롱클릭 시
-        categoryVideoListAdapter.setOnItemLongClickListener(object :
-            HomeCategoryVideoListAdapter.OnItemLongClickListener {
-            override fun onItemLongClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
-                homeViewModel.showDetail(videoItem)
-                homeViewModel.searchByCategory()
-            }
-        })
-
-        // test
-        mostListAdapter.setOnItemLongClickListener(object :
-            HomeMostViewListAdapter.OnItemLongClickListener {
-            override fun onItemLongClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
-                homeViewModel.searchMostVideo()
-            }
-        })
-    }
-    private fun initModel() = with(binding) {
-        homeViewModel.categoryVideo.observe(viewLifecycleOwner) { itemList ->
-            categoryVideoListAdapter.submitList(itemList.toMutableList())
-        }
-        homeViewModel.categoryChannel.observe(viewLifecycleOwner) { itemList ->
-            channelListAdapter.submitList(itemList.toMutableList())
-        }
-        homeViewModel.most.observe(viewLifecycleOwner) { itemList ->
-            mostListAdapter.submitList(itemList.toMutableList())
         }
     }
 

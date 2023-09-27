@@ -1,10 +1,12 @@
 package com.example.mymedia.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.mymedia.data.Category
 import com.example.mymedia.data.ChannelItem
 import com.example.mymedia.data.Data
 import com.example.mymedia.data.ItemRepository
@@ -29,6 +31,11 @@ class HomeViewModel(
     private val _most = MutableLiveData<MutableList<VideoItem>>()
     val most: LiveData<MutableList<VideoItem>>
         get() = _most
+
+    private val _categoryList = MutableLiveData<MutableList<Category>>()
+
+    val categoryList: LiveData<MutableList<Category>>
+        get() = _categoryList
 
     init {
         _categoryVideo.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
@@ -72,6 +79,22 @@ class HomeViewModel(
             }
             _categoryVideo.value = list.filterIsInstance<VideoItem>().toMutableList()
             _categoryChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
+        }
+    }
+
+    fun getCategoryList() {
+        viewModelScope.launch {
+            val list = mutableListOf<Category>()
+            // Video
+            val responseCategoryList = repository.findCategoryList()
+            if (responseCategoryList.isSuccessful) {
+                val categoryList = responseCategoryList.body() ?: mutableListOf()
+                list.addAll(categoryList)
+            } else {
+                // null일 시 공백 리스트 생성
+                _categoryList.value = mutableListOf()
+            }
+            _categoryList.value = list
         }
     }
 }
