@@ -38,12 +38,8 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.ViewHolder>() {
 
         fun bind(videoItem: VideoItem) = with(binding) {
 
-//            Glide.with(root.context)
-//                .load(item.url)
-//                .into(ivMedia)
-
             Glide.with(root.context)
-                .load("https://i.pinimg.com/236x/f4/13/d0/f413d09e8b1b08b0138f63c033dd9237.jpg")
+                .load(videoItem.thumbnail)
                 .into(ivMedia)
 
 
