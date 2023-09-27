@@ -16,7 +16,7 @@ class ItemRepository {
 
     suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
         return fetchItemList {
-            RetrofitInstance.api.getMostPopularVideos(
+            RetrofitInstance.api.searchMostPopularVideos(
                 chart = "mostPopular",
                 maxResults = 25,
             )
@@ -46,7 +46,7 @@ class ItemRepository {
     }
 
     private inline fun fetchItemList(
-        fetchFunction: () -> Response<ApiResponse<Item>>
+        fetchFunction: () -> Response<ApiResponse<SearchItem>>
     ): Response<MutableList<MediaItem>> {
         val response = fetchFunction()
 
@@ -95,7 +95,7 @@ class ItemRepository {
     }
 
     private inline fun fetchCategoryMostList(
-        fetchFunction: () -> Response<ApiResponse<CategoryItem>>
+        fetchFunction: () -> Response<ApiResponse<NoneSearchItem>>
     ): Response<MutableList<MediaItem>> {
         val response = fetchFunction()
 
@@ -127,7 +127,7 @@ class ItemRepository {
     }
 
     private inline fun fetchCategoryList(
-        fetchFunction: () -> Response<ApiResponse<CategoryItem>>
+        fetchFunction: () -> Response<ApiResponse<NoneSearchItem>>
     ): Response<MutableList<Category>> {
         val response = fetchFunction()
 
