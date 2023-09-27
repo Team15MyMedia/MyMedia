@@ -2,12 +2,12 @@ package com.example.mymedia.data
 
 import com.google.gson.annotations.SerializedName
 
-data class ApiResponse(
+data class ApiResponse<T>(
     @SerializedName("kind")
     val kind: String?,
 
     @SerializedName("items")
-    val items: List<Item>?,
+    val items: List<T>?,
 
     @SerializedName("nextPageToken")
     val nextPageToken: String?,
@@ -22,6 +22,16 @@ data class Item(
 
     @SerializedName("id")
     val id: Id?,
+
+    @SerializedName("snippet")
+    val snippet: Snippet?
+)
+data class CategoryItem(
+    @SerializedName("kind")
+    val kind: String?,
+
+    @SerializedName("id")
+    val id: String?,
 
     @SerializedName("snippet")
     val snippet: Snippet?
