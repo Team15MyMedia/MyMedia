@@ -7,14 +7,14 @@ import java.util.Date
 
 class ItemRepository {
 
-    suspend fun findVideoByCategory(): Response<MutableList<VideoItem>> {
-        return fetchVideoList {
-            RetrofitInstance.api.getVideoByCategory()
+    suspend fun findItemByCategory(): Response<MutableList<MediaItem>> {
+        return fetchItemList {
+            RetrofitInstance.api.getAllByCategory()
         }
     }
 
-    suspend fun findMostVideo(): Response<MutableList<VideoItem>> {
-        return fetchVideoList {
+    suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
+        return fetchItemList {
             RetrofitInstance.api.getMostPopularVideos(
                 chart = "mostPopular",
                 maxResults = 25,
@@ -22,14 +22,14 @@ class ItemRepository {
         }
     }
 
-    private inline fun fetchVideoList(
+    private inline fun fetchItemList(
         fetchFunction: () -> Response<ApiResponse>
-    ): Response<MutableList<VideoItem>> {
+    ): Response<MutableList<MediaItem>> {
         val response = fetchFunction()
 
         if (response.isSuccessful) {
             val videoResponse = response.body()
-            val videoList = mutableListOf<VideoItem>()
+            val mediaItemList = mutableListOf<MediaItem>()
 
             videoResponse?.items?.forEach { items ->
                 // 날짜 변환
@@ -37,19 +37,35 @@ class ItemRepository {
                 val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
                 val date = stringToDate(dateString, dateFormat) ?: Date()
 
-                val item = VideoItem(
-                    id = items.id?.videoId ?: "",
-                    title = items.snippet?.title ?: "none-title",
-                    description = items.snippet?.description ?: "",
-                    datetime = date,
-                    thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
-                    isFavorite = false,
-                )
-                videoList.add(item)
+                // media type 확인
+                when (items.id?.kind ?: "none type") {
+                    "youtube#video" -> {
+                        val item = VideoItem(
+                            id = items.id?.videoId ?: "",
+                            title = items.snippet?.title ?: "none-title",
+                            description = items.snippet?.description ?: "",
+                            datetime = date,
+                            thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
+                            isFavorite = false,
+                        )
+                        mediaItemList.add(item)
+                    }
+
+                    "youtube#channel" -> {
+                        val item = ChannelItem(
+                            id = items.id?.videoId ?: "",
+                            title = items.snippet?.title ?: "none-title",
+                            description = items.snippet?.description ?: "",
+                            datetime = date,
+                            thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
+                            isFavorite = false,
+                        )
+                        mediaItemList.add(item)
+                    }
+                }
             }
 
-
-            return Response.success(videoList)
+            return Response.success(mediaItemList)
         } else {
             return Response.error(response.code(), response.errorBody())
         }

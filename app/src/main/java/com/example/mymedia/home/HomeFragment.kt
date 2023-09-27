@@ -4,6 +4,7 @@ import android.R
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +32,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val videoListAdapter by lazy {
+    private val categoryVideoListAdapter by lazy {
         HomeCategoryVideoListAdapter()
     }
 
@@ -77,7 +78,7 @@ class HomeFragment : Fragment() {
 
     private fun initView() = with(binding) {
         // videoRecyclerView 설정
-        videoRecyclerView.adapter = videoListAdapter
+        videoRecyclerView.adapter = categoryVideoListAdapter
         val videoLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         videoRecyclerView.layoutManager = videoLayoutManager
@@ -133,12 +134,12 @@ class HomeFragment : Fragment() {
         }
 
         // 롱클릭 시
-        videoListAdapter.setOnItemLongClickListener(object :
+        categoryVideoListAdapter.setOnItemLongClickListener(object :
             HomeCategoryVideoListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
                 homeViewModel.showDetail(videoItem)
-                homeViewModel.searchCategoryVideo()
+                homeViewModel.searchByCategory()
             }
         })
 
@@ -151,12 +152,11 @@ class HomeFragment : Fragment() {
             }
         })
     }
-
     private fun initModel() = with(binding) {
-        homeViewModel.video.observe(viewLifecycleOwner) { itemList ->
-            videoListAdapter.submitList(itemList.toMutableList())
+        homeViewModel.categoryVideo.observe(viewLifecycleOwner) { itemList ->
+            categoryVideoListAdapter.submitList(itemList.toMutableList())
         }
-        homeViewModel.channel.observe(viewLifecycleOwner) { itemList ->
+        homeViewModel.categoryChannel.observe(viewLifecycleOwner) { itemList ->
             channelListAdapter.submitList(itemList.toMutableList())
         }
         homeViewModel.most.observe(viewLifecycleOwner) { itemList ->
