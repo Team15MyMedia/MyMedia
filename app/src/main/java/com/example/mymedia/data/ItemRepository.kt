@@ -70,6 +70,7 @@ class ItemRepository {
                             datetime = date,
                             thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                             isFavorite = false,
+                            channelId = items.snippet?.channelId ?: "",
                         )
                         mediaItemList.add(item)
                     }
@@ -116,6 +117,7 @@ class ItemRepository {
                     datetime = date,
                     thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                     isFavorite = false,
+                    channelId = items.snippet?.channelId ?: "",
                 )
                 mediaItemList.add(item)
             }
