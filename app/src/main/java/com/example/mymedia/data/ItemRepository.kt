@@ -1,6 +1,5 @@
 package com.example.mymedia.data
 
-import android.util.Log
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -9,7 +8,7 @@ class ItemRepository {
 
     suspend fun findItemByCategory(id: String): Response<MutableList<MediaItem>> {
         return fetchCategoryMostList {
-            RetrofitInstance.api.getAllByCategory(
+            RetrofitInstance.api.getVideoByCategory(
                 videoCategoryId = id
             )
         }
