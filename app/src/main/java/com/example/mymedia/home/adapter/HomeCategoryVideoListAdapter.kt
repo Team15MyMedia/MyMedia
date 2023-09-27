@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mymedia.R
 import com.example.mymedia.databinding.VideoItemBinding
 
-class HomeVideoListAdapter :
-    ListAdapter<VideoItem, HomeVideoListAdapter.ViewHolder>(
+class HomeCategoryVideoListAdapter :
+    ListAdapter<VideoItem, HomeCategoryVideoListAdapter.ViewHolder>(
         object : DiffUtil.ItemCallback<VideoItem>() {
             override fun areItemsTheSame(
                 oldVideoItem: VideoItem,

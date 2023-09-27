@@ -5,23 +5,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mymedia.R
+import com.bumptech.glide.Glide
+import com.example.mymedia.data.ChannelItem
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.ChannelItemBinding
 
 class HomeChannelListAdapter :
-    ListAdapter<VideoItem, HomeChannelListAdapter.ViewHolder>(
-        object : DiffUtil.ItemCallback<VideoItem>() {
+    ListAdapter<ChannelItem, HomeChannelListAdapter.ViewHolder>(
+        object : DiffUtil.ItemCallback<ChannelItem>() {
             override fun areItemsTheSame(
-                oldVideoItem: VideoItem,
-                newVideoItem: VideoItem
+                oldVideoItem: ChannelItem,
+                newVideoItem: ChannelItem
             ): Boolean {
                 return oldVideoItem.id == newVideoItem.id
             }
 
             override fun areContentsTheSame(
-                oldVideoItem: VideoItem,
-                newVideoItem: VideoItem
+                oldVideoItem: ChannelItem,
+                newVideoItem: ChannelItem
             ): Boolean {
                 return oldVideoItem == newVideoItem
             }
@@ -29,7 +30,7 @@ class HomeChannelListAdapter :
 
     // 롱클릭 리스너 인터페이스 정의
     interface OnItemLongClickListener {
-        fun onItemLongClick(videoItem: VideoItem)
+        fun onItemLongClick(channelItem: ChannelItem)
     }
 
     private var onItemLongClickListener: OnItemLongClickListener? = null
@@ -54,13 +55,16 @@ class HomeChannelListAdapter :
         private val binding: ChannelItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(videoItem: VideoItem) {
+        fun bind(channelItem: ChannelItem) {
             with(binding) {
-                channelImageView.setImageResource(R.drawable._2023_09_25_171503)
+                // 이미지 설정
+                Glide.with(itemView.context)
+                    .load(channelItem.thumbnail)
+                    .into(channelImageView)
                 channelImageView.clipToOutline = true
 
                 itemView.setOnLongClickListener {
-                    onItemLongClickListener?.onItemLongClick(videoItem)
+                    onItemLongClickListener?.onItemLongClick(channelItem)
                     true
                 }
             }
