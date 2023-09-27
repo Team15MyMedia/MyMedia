@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".detail.DetailFragment">
+    tools:context=".detail.DetailActivity">
 
     <ImageButton
         android:id="@+id/imageButton2"
@@ -108,7 +108,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="LIKE"
+        android:text="좋아요"
         android:textColor="@color/gray"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/imageButton3"
@@ -120,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="SHARE"
+        android:text="공유하기"
         android:textColor="@color/gray"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/imageButton4"

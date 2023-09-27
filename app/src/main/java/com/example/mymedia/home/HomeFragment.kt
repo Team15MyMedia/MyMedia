@@ -111,8 +111,8 @@ class HomeFragment : Fragment() {
             HomeCategoryVideoListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
-//                homeViewModel.showDetail(videoItem)
-//                homeViewModel.searchByCategory()
+               homeViewModel.showDetail(videoItem,requireContext())
+ //               homeViewModel.searchByCategory()
                 homeViewModel.getCategoryList()
             }
         })
