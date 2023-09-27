@@ -4,6 +4,7 @@ import android.R
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +20,7 @@ import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
 import com.example.mymedia.home.adapter.HomeMostViewListAdapter
-import com.example.mymedia.home.adapter.HomeVideoListAdapter
+import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 
 
 class HomeFragment : Fragment() {
@@ -31,8 +32,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val videoListAdapter by lazy {
-        HomeVideoListAdapter()
+    private val categoryVideoListAdapter by lazy {
+        HomeCategoryVideoListAdapter()
     }
 
     private val channelListAdapter by lazy {
@@ -77,7 +78,7 @@ class HomeFragment : Fragment() {
 
     private fun initView() = with(binding) {
         // videoRecyclerView 설정
-        videoRecyclerView.adapter = videoListAdapter
+        videoRecyclerView.adapter = categoryVideoListAdapter
         val videoLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         videoRecyclerView.layoutManager = videoLayoutManager
@@ -133,12 +134,12 @@ class HomeFragment : Fragment() {
         }
 
         // 롱클릭 시
-        videoListAdapter.setOnItemLongClickListener(object :
-            HomeVideoListAdapter.OnItemLongClickListener {
+        categoryVideoListAdapter.setOnItemLongClickListener(object :
+            HomeCategoryVideoListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
                 homeViewModel.showDetail(videoItem)
-                homeViewModel.searchCategoryVideo()
+                homeViewModel.searchByCategory()
             }
         })
 
@@ -151,12 +152,11 @@ class HomeFragment : Fragment() {
             }
         })
     }
-
     private fun initModel() = with(binding) {
-        homeViewModel.video.observe(viewLifecycleOwner) { itemList ->
-            videoListAdapter.submitList(itemList.toMutableList())
+        homeViewModel.categoryVideo.observe(viewLifecycleOwner) { itemList ->
+            categoryVideoListAdapter.submitList(itemList.toMutableList())
         }
-        homeViewModel.channel.observe(viewLifecycleOwner) { itemList ->
+        homeViewModel.categoryChannel.observe(viewLifecycleOwner) { itemList ->
             channelListAdapter.submitList(itemList.toMutableList())
         }
         homeViewModel.most.observe(viewLifecycleOwner) { itemList ->

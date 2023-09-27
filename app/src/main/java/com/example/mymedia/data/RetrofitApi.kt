@@ -7,10 +7,9 @@ import retrofit2.http.Query
 
 interface RetrofitApi {
     @GET("search")
-    suspend fun getVideoByCategory(
+    suspend fun getAllByCategory(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
         @Query("part") part: String = "snippet",
-        @Query("type") type: String = "video",
         @Query("maxResults") maxResults: Int = 25,
     ): Response<ApiResponse>
 
