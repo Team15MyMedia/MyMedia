@@ -19,7 +19,7 @@ import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
 import com.example.mymedia.home.adapter.HomeMostViewListAdapter
-import com.example.mymedia.home.adapter.HomeVideoListAdapter
+import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 
 
 class HomeFragment : Fragment() {
@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val videoListAdapter by lazy {
-        HomeVideoListAdapter()
+        HomeCategoryVideoListAdapter()
     }
 
     private val channelListAdapter by lazy {
@@ -134,7 +134,7 @@ class HomeFragment : Fragment() {
 
         // 롱클릭 시
         videoListAdapter.setOnItemLongClickListener(object :
-            HomeVideoListAdapter.OnItemLongClickListener {
+            HomeCategoryVideoListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
                 homeViewModel.showDetail(videoItem)
