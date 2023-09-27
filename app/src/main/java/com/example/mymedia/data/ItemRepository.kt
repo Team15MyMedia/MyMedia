@@ -30,6 +30,22 @@ class ItemRepository {
         }
     }
 
+    suspend fun searchVideo(text: String): Response<MutableList<MediaItem>> {
+        return fetchItemList {
+            RetrofitInstance.api.searchVideos(
+                query = text
+            )
+        }
+    }
+
+    suspend fun searchChannel(text: String): Response<MutableList<MediaItem>> {
+        return fetchItemList {
+            RetrofitInstance.api.searchCategory(
+                query = text
+            )
+        }
+    }
+
     private inline fun fetchItemList(
         fetchFunction: () -> Response<ApiResponse<Item>>
     ): Response<MutableList<MediaItem>> {
