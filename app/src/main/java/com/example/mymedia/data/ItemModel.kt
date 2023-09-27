@@ -29,6 +29,10 @@ data class ChannelItem(
     override var isFavorite: Boolean
 ) : MediaItem()
 
+data class Category(
+    val id: String,
+    val title: String,
+)
 
 
 //id : String
