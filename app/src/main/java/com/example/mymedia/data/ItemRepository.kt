@@ -22,8 +22,14 @@ class ItemRepository {
         }
     }
 
+    suspend fun findCategoryList(): Response<MutableList<Category>> {
+        return fetchCategoryList {
+            RetrofitInstance.api.getCategoryList()
+        }
+    }
+
     private inline fun fetchItemList(
-        fetchFunction: () -> Response<ApiResponse>
+        fetchFunction: () -> Response<ApiResponse<Item>>
     ): Response<MutableList<MediaItem>> {
         val response = fetchFunction()
 
@@ -66,6 +72,28 @@ class ItemRepository {
             }
 
             return Response.success(mediaItemList)
+        } else {
+            return Response.error(response.code(), response.errorBody())
+        }
+    }
+
+    private inline fun fetchCategoryList(
+        fetchFunction: () -> Response<ApiResponse<CategoryItem>>
+    ): Response<MutableList<Category>> {
+        val response = fetchFunction()
+
+        if (response.isSuccessful) {
+            val categoryResponse = response.body()
+            val categoryList = mutableListOf<Category>()
+
+            categoryResponse?.items?.forEach { items ->
+                val category = Category(
+                    id = items.id ?: "0",
+                    title = items.snippet?.title ?: "none-title",
+                )
+                categoryList.add(category)
+            }
+            return Response.success(categoryList)
         } else {
             return Response.error(response.code(), response.errorBody())
         }

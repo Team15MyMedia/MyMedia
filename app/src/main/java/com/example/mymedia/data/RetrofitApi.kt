@@ -11,7 +11,7 @@ interface RetrofitApi {
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
         @Query("part") part: String = "snippet",
         @Query("maxResults") maxResults: Int = 25,
-    ): Response<ApiResponse>
+    ): Response<ApiResponse<Item>>
 
     @GET("search")
     suspend fun getMostPopularVideos(
@@ -20,5 +20,12 @@ interface RetrofitApi {
         @Query("type") type: String = "video",
         @Query("part") part: String = "snippet",
         @Query("maxResults") maxResults: Int = 25,
-    ): Response<ApiResponse>
+    ): Response<ApiResponse<Item>>
+
+    @GET("videoCategories")
+    suspend fun getCategoryList(
+        @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
+        @Query("regionCode") regionCode: String = "KR",
+        @Query("part") part: String = "snippet",
+    ): Response<ApiResponse<CategoryItem>>
 }
