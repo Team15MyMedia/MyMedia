@@ -7,9 +7,11 @@ import java.util.Date
 
 class ItemRepository {
 
-    suspend fun findItemByCategory(): Response<MutableList<MediaItem>> {
-        return fetchItemList {
-            RetrofitInstance.api.getAllByCategory()
+    suspend fun findItemByCategory(id: String): Response<MutableList<MediaItem>> {
+        return fetchCategoryMostList {
+            RetrofitInstance.api.getAllByCategory(
+                videoCategoryId = id
+            )
         }
     }
 
@@ -69,6 +71,38 @@ class ItemRepository {
                         mediaItemList.add(item)
                     }
                 }
+            }
+
+            return Response.success(mediaItemList)
+        } else {
+            return Response.error(response.code(), response.errorBody())
+        }
+    }
+
+    private inline fun fetchCategoryMostList(
+        fetchFunction: () -> Response<ApiResponse<CategoryItem>>
+    ): Response<MutableList<MediaItem>> {
+        val response = fetchFunction()
+
+        if (response.isSuccessful) {
+            val videoResponse = response.body()
+            val mediaItemList = mutableListOf<MediaItem>()
+
+            videoResponse?.items?.forEach { items ->
+                // 날짜 변환
+                val dateString = items.snippet?.publishedAt ?: ""
+                val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                val date = stringToDate(dateString, dateFormat) ?: Date()
+
+                val item = VideoItem(
+                    id = items.id ?: "",
+                    title = items.snippet?.title ?: "none-title",
+                    description = items.snippet?.description ?: "",
+                    datetime = date,
+                    thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
+                    isFavorite = false,
+                )
+                mediaItemList.add(item)
             }
 
             return Response.success(mediaItemList)

@@ -102,7 +102,9 @@ class HomeFragment : Fragment() {
         mostRecyclerView.layoutManager = mostLayoutManager
 
         // spinner 설정
-        setSpinner(spinnerItems)
+        setSpinner(
+            homeViewModel.categoryList.value?.map { it.title }?.toTypedArray() ?: spinnerItems
+        )
 
         // 롱클릭 시
         categoryVideoListAdapter.setOnItemLongClickListener(object :
@@ -110,7 +112,7 @@ class HomeFragment : Fragment() {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
 //                homeViewModel.showDetail(videoItem)
-                homeViewModel.searchByCategory()
+//                homeViewModel.searchByCategory()
                 homeViewModel.getCategoryList()
             }
         })
@@ -161,9 +163,20 @@ class HomeFragment : Fragment() {
         spinnerAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+            override fun onItemSelected(
+                adapterView: AdapterView<*>,
+                view: View,
+                position: Int,
+                l: Long
+            ) {
                 (adapterView.getChildAt(0) as TextView).setTextColor(Color.WHITE)
+                val items = homeViewModel.categoryList.value?.map { it.title }?.toTypedArray()
+                    ?: spinnerItems
+                val selectedItem = items[position]
+                val category = homeViewModel.categoryList.value
+                val categoryId = category?.find { it.title == selectedItem }?.id ?: "1"
 
+                homeViewModel.searchByCategory(categoryId)
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}

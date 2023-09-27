@@ -41,6 +41,7 @@ class HomeViewModel(
         _categoryVideo.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
         _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
         _most.value = Data.getSearchData()
+        getCategoryList()
     }
 
     fun showDetail(videoItem: VideoItem) {
@@ -64,11 +65,11 @@ class HomeViewModel(
         }
     }
 
-    fun searchByCategory() {
+    fun searchByCategory(id: String) {
         viewModelScope.launch {
             val list = mutableListOf<MediaItem>()
             // Video
-            val responseVideo = repository.findItemByCategory()
+            val responseVideo = repository.findItemByCategory(id)
             if (responseVideo.isSuccessful) {
                 val itemList = responseVideo.body() ?: mutableListOf()
                 list.addAll(itemList)

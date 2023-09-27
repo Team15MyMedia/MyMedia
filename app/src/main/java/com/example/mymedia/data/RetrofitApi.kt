@@ -6,12 +6,14 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RetrofitApi {
-    @GET("search")
+    @GET("videos")
     suspend fun getAllByCategory(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
         @Query("part") part: String = "snippet",
-        @Query("maxResults") maxResults: Int = 25,
-    ): Response<ApiResponse<Item>>
+        @Query("chart") chart: String = "mostPopular",
+        @Query("regionCode") regionCode: String = "KR",
+        @Query("videoCategoryId") videoCategoryId: String,
+    ): Response<ApiResponse<CategoryItem>>
 
     @GET("search")
     suspend fun getMostPopularVideos(
