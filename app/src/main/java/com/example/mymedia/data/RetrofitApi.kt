@@ -21,4 +21,25 @@ interface RetrofitApi {
         @Query("part") part: String = "snippet",
         @Query("maxResults") maxResults: Int = 25,
     ): Response<ApiResponse>
+
+    @GET("search")
+    suspend fun searchVideos(
+        @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
+        @Query("q") query: String,
+        @Query("chart") chart: String = "mostPopular",
+        @Query("type") type: String = "video",
+        @Query("part") part: String = "snippet",
+        @Query("maxResults") maxResults: Int = 25,
+    ): Response<ApiResponse>
+
+    @GET("search")
+    suspend fun searchCategory(
+        @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
+        @Query("q") query: String,
+        @Query("chart") chart: String = "mostPopular",
+        @Query("type") type: String = "channel",
+        @Query("part") part: String = "snippet",
+        @Query("maxResults") maxResults: Int = 25,
+    ): Response<ApiResponse>
+
 }
