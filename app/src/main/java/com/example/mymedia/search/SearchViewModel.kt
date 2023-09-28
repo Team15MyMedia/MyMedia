@@ -74,6 +74,7 @@ class SearchViewModel(
             if (responseVideo.isSuccessful) {
                 val itemList = responseVideo.body() ?: mutableListOf()
                 list.addAll(itemList)
+                Log.d("resultlist", list.toString())
             } else {
                 _categoryChannel.value = mutableListOf()
             }

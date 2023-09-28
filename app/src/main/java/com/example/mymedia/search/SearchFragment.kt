@@ -41,6 +41,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initModel()
+
     }
 
     private fun initView() = with(binding) {
