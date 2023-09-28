@@ -42,8 +42,10 @@ class HomeViewModel(
 
     init {
         _categoryVideo.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
-        _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
-        _most.value = Data.getSearchData()
+//        _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
+
+        // API 할당량 절약을 위한 주석 처리
+//        searchMostVideo()
         getCategoryList()
     }
 
@@ -54,6 +56,7 @@ class HomeViewModel(
         intent.putExtra("videoDescription", videoItem.description)
         context.startActivity(intent)
     }
+
     fun searchMostVideo() {
         viewModelScope.launch {
             val list = mutableListOf<MediaItem>()
@@ -81,9 +84,27 @@ class HomeViewModel(
             } else {
                 // null일 시 공백 리스트 생성
                 _categoryVideo.value = mutableListOf()
-                _categoryChannel.value = mutableListOf()
             }
             _categoryVideo.value = list.filterIsInstance<VideoItem>().toMutableList()
+            searchChannelByID()
+        }
+    }
+
+    private fun searchChannelByID() {
+        viewModelScope.launch {
+            val list = mutableListOf<MediaItem>()
+            val channelIdList = _categoryVideo.value?.map {
+                it.channelId
+            } ?: mutableListOf()
+            // Channel
+            for (id in channelIdList) {
+                val responseChannel = repository.findChannelByID(id)
+
+                if (responseChannel.isSuccessful) {
+                    val item = responseChannel.body() ?: continue
+                    list.add(item)
+                }
+            }
             _categoryChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
         }
     }

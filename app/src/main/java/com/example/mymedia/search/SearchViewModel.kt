@@ -63,7 +63,6 @@ class SearchViewModel(
                 _searchvideo.value = mutableListOf()
             }
             _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
-            Log.d("searchvideo", _searchvideo.value.toString())
         }
     }
 

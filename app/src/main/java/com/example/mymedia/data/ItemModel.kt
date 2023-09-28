@@ -17,7 +17,8 @@ data class VideoItem(
     override val description: String,
     override val datetime: Date,
     override val thumbnail: String,
-    override var isFavorite: Boolean
+    override var isFavorite: Boolean,
+    val channelId: String
 ) : MediaItem()
 
 data class ChannelItem(

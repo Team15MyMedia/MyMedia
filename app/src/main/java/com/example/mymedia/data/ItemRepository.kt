@@ -1,6 +1,5 @@
 package com.example.mymedia.data
 
-import android.util.Log
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -9,15 +8,23 @@ class ItemRepository {
 
     suspend fun findItemByCategory(id: String): Response<MutableList<MediaItem>> {
         return fetchCategoryMostList {
-            RetrofitInstance.api.getAllByCategory(
+            RetrofitInstance.api.getVideoByCategory(
                 videoCategoryId = id
+            )
+        }
+    }
+
+    suspend fun findChannelByID(channelId: String): Response<ChannelItem> {
+        return fetchChannel {
+            RetrofitInstance.api.getChannel(
+                id = channelId
             )
         }
     }
 
     suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
         return fetchItemList {
-            RetrofitInstance.api.getMostPopularVideos(
+            RetrofitInstance.api.searchMostPopularVideos(
                 chart = "mostPopular",
                 maxResults = 25,
             )
@@ -47,7 +54,7 @@ class ItemRepository {
     }
 
     private inline fun fetchItemList(
-        fetchFunction: () -> Response<ApiResponse<Item>>
+        fetchFunction: () -> Response<ApiResponse<SearchItem>>
     ): Response<MutableList<MediaItem>> {
         val response = fetchFunction()
 
@@ -71,6 +78,7 @@ class ItemRepository {
                             datetime = date,
                             thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                             isFavorite = false,
+                            channelId = items.snippet?.channelId ?: "",
                         )
                         mediaItemList.add(item)
                     }
@@ -96,7 +104,7 @@ class ItemRepository {
     }
 
     private inline fun fetchCategoryMostList(
-        fetchFunction: () -> Response<ApiResponse<CategoryItem>>
+        fetchFunction: () -> Response<ApiResponse<NoneSearchItem>>
     ): Response<MutableList<MediaItem>> {
         val response = fetchFunction()
 
@@ -117,6 +125,7 @@ class ItemRepository {
                     datetime = date,
                     thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                     isFavorite = false,
+                    channelId = items.snippet?.channelId ?: "",
                 )
                 mediaItemList.add(item)
             }
@@ -128,7 +137,7 @@ class ItemRepository {
     }
 
     private inline fun fetchCategoryList(
-        fetchFunction: () -> Response<ApiResponse<CategoryItem>>
+        fetchFunction: () -> Response<ApiResponse<NoneSearchItem>>
     ): Response<MutableList<Category>> {
         val response = fetchFunction()
 
@@ -144,6 +153,37 @@ class ItemRepository {
                 categoryList.add(category)
             }
             return Response.success(categoryList)
+        } else {
+            return Response.error(response.code(), response.errorBody())
+        }
+    }
+
+    private inline fun fetchChannel(
+        fetchFunction: () -> Response<ApiResponse<NoneSearchItem>>
+    ): Response<ChannelItem> {
+        val response = fetchFunction()
+
+        if (response.isSuccessful) {
+            val videoResponse = response.body()
+            var item: ChannelItem? = null
+
+            videoResponse?.items?.forEach { items ->
+                // 날짜 변환
+                val dateString = items.snippet?.publishedAt ?: ""
+                val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                val date = stringToDate(dateString, dateFormat) ?: Date()
+
+                item = ChannelItem(
+                    id = items.id ?: "",
+                    title = items.snippet?.title ?: "none-title",
+                    description = items.snippet?.description ?: "",
+                    datetime = date,
+                    thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
+                    isFavorite = false,
+                )
+            }
+
+            return Response.success(item)
         } else {
             return Response.error(response.code(), response.errorBody())
         }
