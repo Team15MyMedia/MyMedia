@@ -16,7 +16,7 @@ data class ApiResponse<T>(
     val regionCode: String?,
 )
 
-data class Item(
+data class SearchItem(
     @SerializedName("kind")
     val kind: String?,
 
@@ -26,7 +26,8 @@ data class Item(
     @SerializedName("snippet")
     val snippet: Snippet?
 )
-data class CategoryItem(
+
+data class NoneSearchItem(
     @SerializedName("kind")
     val kind: String?,
 

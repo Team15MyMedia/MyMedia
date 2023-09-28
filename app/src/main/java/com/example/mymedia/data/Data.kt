@@ -16,7 +16,8 @@ object Data {
                 "",
                 Date(),
                 "https://i.ytimg.com/vi/n3wr3IOO4N8/default.jpg",
-                false
+                false,
+                ""
             )
         )
         searchData.apply {
@@ -87,7 +88,8 @@ object Data {
             randomUrl,
             randomDatetime,
             randomThumbnail,
-            randomIsFavorite
+            randomIsFavorite,
+            ""
         )
     }
 
