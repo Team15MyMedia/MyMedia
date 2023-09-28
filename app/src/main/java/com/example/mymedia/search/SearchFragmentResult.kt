@@ -1,26 +1,16 @@
 package com.example.mymedia.search
 
-import android.app.appsearch.SearchResult
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymedia.data.ItemRepository
-import com.example.mymedia.data.MediaItem
-import com.example.mymedia.data.VideoItem
-import com.example.mymedia.databinding.FragmentSearchPopularTop10Binding
 import com.example.mymedia.databinding.FragmentSearchResultBinding
-import com.example.mymedia.home.HomeViewModel
-import com.example.mymedia.home.SearchViewModelFactory
-import kotlinx.coroutines.launch
 
 class SearchFragmentResult(text: String) : Fragment() {
 
@@ -30,15 +20,12 @@ class SearchFragmentResult(text: String) : Fragment() {
     private var _binding: FragmentSearchResultBinding? = null
     private val binding get() = _binding!!
 
-    private val CHANNEL_VIEW_TYPE = 1
-    private val VIDEOS_VIEW_TYPE = 2
-
     private val channelListAdapter by lazy {
-        SearchResultRVAdapter(CHANNEL_VIEW_TYPE)
+        SearchResultChannelRVAdapter()
     }
 
     private val videosListAdapter by lazy {
-        SearchResultRVAdapter(VIDEOS_VIEW_TYPE)
+        SearchResultVideoRVAdapter()
     }
 
     private val searchViewModel by lazy {
@@ -77,6 +64,7 @@ class SearchFragmentResult(text: String) : Fragment() {
 
 
         searchViewModel.searchVideo(searchText)
+        searchViewModel.searchByCategory(searchText)
 
     }
 
@@ -86,6 +74,7 @@ class SearchFragmentResult(text: String) : Fragment() {
         }
 
         searchViewModel.categoryChannel.observe(viewLifecycleOwner) { itemList ->
+            channelListAdapter.addItems(itemList.toMutableList())
         }
     }
 

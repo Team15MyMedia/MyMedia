@@ -35,7 +35,6 @@ interface RetrofitApi {
     suspend fun searchVideos(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
         @Query("q") query: String,
-        @Query("chart") chart: String = "mostPopular",
         @Query("type") type: String = "video",
         @Query("part") part: String = "snippet",
         @Query("maxResults") maxResults: Int = 25,
@@ -45,7 +44,7 @@ interface RetrofitApi {
     suspend fun searchCategory(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
         @Query("q") query: String,
-        @Query("chart") chart: String = "mostPopular",
+        @Query("order") chart: String = "viewCount",
         @Query("type") type: String = "channel",
         @Query("part") part: String = "snippet",
         @Query("maxResults") maxResults: Int = 25,

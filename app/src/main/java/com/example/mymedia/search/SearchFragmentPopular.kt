@@ -1,6 +1,7 @@
 package com.example.mymedia.search
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -51,10 +52,6 @@ class SearchFragmentPopular : Fragment() {
     private fun initView() = with(binding) {
         rvPopularTop10.adapter = listAdapter
         rvPopularTop10.layoutManager = LinearLayoutManager(requireContext())
-
-//        val item = com.example.mymedia.data.Data
-//        val data = item.getSearchData()
-//        listAdapter.addItems(data.toList())
 
         searchViewModel.searchMostVideo()
     }
