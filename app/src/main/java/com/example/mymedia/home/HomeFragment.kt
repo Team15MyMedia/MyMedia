@@ -174,7 +174,7 @@ class HomeFragment : Fragment() {
                 val category = homeViewModel.categoryList.value
                 val categoryId = category?.find { it.title == selectedItem }?.id ?: "1"
 
-                homeViewModel.searchByCategory(categoryId)
+//                homeViewModel.searchByCategory(categoryId)
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
