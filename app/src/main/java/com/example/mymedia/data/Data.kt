@@ -5,7 +5,7 @@ import kotlin.random.Random
 
 object Data {
     private val searchData: MutableList<VideoItem> = mutableListOf()
-    private val bookmarkData: MutableList<VideoItem> = mutableListOf()
+    private val favoriteData: MutableList<VideoItem> = mutableListOf()
     private val mediaData: MutableList<MediaItem> = mutableListOf()
 
     init {
@@ -34,6 +34,8 @@ object Data {
                 add(randomVideoItem)
             }
         }
+        //test
+        favoriteData.addAll(searchData)
     }
 
     fun getSearchData(): MutableList<VideoItem> {
@@ -52,16 +54,16 @@ object Data {
         searchData.add(videoItem)
     }
 
-    fun getBookmarkData(): MutableList<VideoItem> {
-        return bookmarkData
+    fun getFavoriteData(): MutableList<VideoItem> {
+        return favoriteData
     }
 
     fun removeBookmarkItem(videoItem: VideoItem) {
-        bookmarkData.remove(videoItem)
+        favoriteData.remove(videoItem)
     }
 
     fun addBookmarkItem(videoItem: VideoItem) {
-        bookmarkData.add(videoItem)
+        favoriteData.add(videoItem)
     }
 
 
@@ -69,9 +71,6 @@ object Data {
     private fun getCurrentDateTime(): Date {
         return Date()
     }
-
-    // 날짜 포맷을 지정하는 함수
-
 
     // 임의의 데이터를 생성하는 함수
     private fun generateRandomVideoData(): VideoItem {
