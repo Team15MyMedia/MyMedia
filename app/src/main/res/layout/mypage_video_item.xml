@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#000000"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- 이미지 -->
+    <ImageView
+        android:id="@+id/favoriteImageView"
+        android:layout_width="match_parent"
+        android:layout_height="120sp"
+        android:background="@drawable/rounded_corner_bg"
+        android:scaleType="centerCrop"
+        android:src="@drawable/_2023_09_25_171503"
+        app:layout_constraintBottom_toTopOf="@+id/favoriteTitleTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 제목 -->
+    <TextView
+        android:id="@+id/favoriteTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="동영상 제목"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

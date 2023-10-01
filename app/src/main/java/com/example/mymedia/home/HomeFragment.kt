@@ -4,7 +4,6 @@ import android.R
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymedia.data.Category
-import com.example.mymedia.data.CategoryItem
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
@@ -176,7 +174,7 @@ class HomeFragment : Fragment() {
                 val category = homeViewModel.categoryList.value
                 val categoryId = category?.find { it.title == selectedItem }?.id ?: "1"
 
-                homeViewModel.searchByCategory(categoryId)
+//                homeViewModel.searchByCategory(categoryId)
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}

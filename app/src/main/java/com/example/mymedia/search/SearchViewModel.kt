@@ -63,7 +63,6 @@ class SearchViewModel(
                 _searchvideo.value = mutableListOf()
             }
             _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
-            Log.d("searchvideo", _searchvideo.value.toString())
         }
     }
 
@@ -75,6 +74,7 @@ class SearchViewModel(
             if (responseVideo.isSuccessful) {
                 val itemList = responseVideo.body() ?: mutableListOf()
                 list.addAll(itemList)
+                Log.d("resultlist", list.toString())
             } else {
                 _categoryChannel.value = mutableListOf()
             }
