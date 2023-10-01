@@ -37,10 +37,11 @@ interface RetrofitApi {
     @GET("videos")
     suspend fun getVideoByCategory(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
-        @Query("part") part: String = "snippet",
+        @Query("part") part: String = "snippet,contentDetails",
         @Query("chart") chart: String = "mostPopular",
         @Query("regionCode") regionCode: String = "KR",
         @Query("videoCategoryId") videoCategoryId: String,
+        @Query("maxResults") maxResults: Int = 10,
     ): Response<ApiResponse<NoneSearchItem>>
 
     @GET("videoCategories")
@@ -56,6 +57,4 @@ interface RetrofitApi {
         @Query("part") part: String = "snippet",
         @Query("id") id: String,
     ): Response<ApiResponse<NoneSearchItem>>
-
-
 }

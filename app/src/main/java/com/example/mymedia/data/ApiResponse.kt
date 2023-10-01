@@ -35,7 +35,15 @@ data class NoneSearchItem(
     val id: String?,
 
     @SerializedName("snippet")
-    val snippet: Snippet?
+    val snippet: Snippet?,
+
+    @SerializedName("contentDetails")
+    val contentDetails: ContentDetails?
+)
+
+data class ContentDetails(
+    @SerializedName("duration")
+    val duration: String?,
 )
 
 data class Id(
