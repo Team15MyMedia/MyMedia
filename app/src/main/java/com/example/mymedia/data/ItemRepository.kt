@@ -113,6 +113,10 @@ class ItemRepository {
             val mediaItemList = mutableListOf<MediaItem>()
 
             videoResponse?.items?.forEach { items ->
+                // shorts 판단
+                val playTime = items.contentDetails?.duration ?: return@forEach
+                if (isShorts(playTime)) return@forEach
+
                 // 날짜 변환
                 val dateString = items.snippet?.publishedAt ?: ""
                 val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
@@ -197,5 +201,9 @@ class ItemRepository {
             e.printStackTrace()
             null
         }
+    }
+
+    private fun isShorts(duration: String): Boolean {
+        return duration.matches(Regex("PT\\d+S")) || duration == "PT1M"
     }
 }
