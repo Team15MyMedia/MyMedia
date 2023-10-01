@@ -42,10 +42,8 @@ class HomeViewModel(
 
     init {
         _categoryVideo.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
-//        _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
+        _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
 
-        // API 할당량 절약을 위한 주석 처리
-//        searchMostVideo()
         getCategoryList()
     }
 
