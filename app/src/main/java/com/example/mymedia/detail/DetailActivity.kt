@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mymedia.R
 import com.example.mymedia.data.VideoItem
 import com.bumptech.glide.Glide
+import com.example.mymedia.home.getHighQualityThumbnailUrl
 
 class DetailActivity : AppCompatActivity() {
 
@@ -32,7 +33,7 @@ class DetailActivity : AppCompatActivity() {
         descriptionTextView.text = description
 
         Glide.with(this)
-            .load(imageUrl)
+            .load(getHighQualityThumbnailUrl(imageUrl))
             .into(thumbnailImageView)
     }
 }

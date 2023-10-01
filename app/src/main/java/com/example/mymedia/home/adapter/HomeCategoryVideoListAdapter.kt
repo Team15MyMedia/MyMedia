@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mymedia.databinding.VideoItemBinding
+import com.example.mymedia.home.getHighQualityThumbnailUrl
 
 class HomeCategoryVideoListAdapter :
     ListAdapter<VideoItem, HomeCategoryVideoListAdapter.ViewHolder>(
@@ -56,8 +57,9 @@ class HomeCategoryVideoListAdapter :
 
         fun bind(videoItem: VideoItem) {
             with(binding) {
+                val highQualityThumbnailUrl = getHighQualityThumbnailUrl(videoItem.thumbnail)
                 Glide.with(itemView.context)
-                    .load(videoItem.thumbnail)
+                    .load(highQualityThumbnailUrl)
                     .into(posterImageView)
                 posterImageView.clipToOutline = true
 
