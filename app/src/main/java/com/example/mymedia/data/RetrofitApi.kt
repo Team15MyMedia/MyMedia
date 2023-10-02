@@ -44,7 +44,7 @@ interface RetrofitApi {
         @Query("chart") chart: String = "mostPopular",
         @Query("regionCode") regionCode: String = "KR",
         @Query("videoCategoryId") videoCategoryId: String,
-        @Query("maxResults") maxResults: Int = 10,
+        @Query("maxResults") maxResults: Int = 50,
     ): Response<ApiResponse<NoneSearchItem>>
 
     @GET("videoCategories")
