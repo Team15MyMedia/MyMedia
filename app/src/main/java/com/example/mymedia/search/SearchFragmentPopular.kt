@@ -57,13 +57,8 @@ class SearchFragmentPopular : Fragment() {
     }
 
     private fun initModel() = with(binding) {
-        val item10List = mutableListOf<VideoItem>()
         searchViewModel.most.observe(viewLifecycleOwner) { itemList ->
-            item10List.clear()
-            for(i in 0 .. 9){
-                item10List.add(itemList[i])
-            }
-            listAdapter.submitList(item10List.toMutableList())
+            listAdapter.submitList(itemList.subList(0,10).toMutableList())
         }
     }
 

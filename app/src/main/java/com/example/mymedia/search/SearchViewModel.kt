@@ -1,6 +1,7 @@
 package com.example.mymedia.search
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.MediaItem
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.home.HomeViewModel
+import com.example.mymedia.main.MainActivity
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -30,9 +32,9 @@ class SearchViewModel(
     val categoryChannel: LiveData<MutableList<ChannelItem>>
         get() = _categoryChannel
 
-//    init {
-//        _searchvideo.value = Data.getSearchData()
-//    }
+    init {
+        _searchvideo.value = Data.getSearchData()
+    }
 
     fun searchMostVideo() {
         viewModelScope.launch {
@@ -44,6 +46,7 @@ class SearchViewModel(
                 list.addAll(itemList)
             } else {
                 // null일 시 공백 리스트 생성
+                Toast.makeText(MainActivity.getContext(), "비디오 검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
                 _most.value = mutableListOf()
             }
             _most.value = list.filterIsInstance<VideoItem>().toMutableList()
@@ -60,6 +63,7 @@ class SearchViewModel(
                 list.addAll(itemList)
             } else {
                 // null일 시 공백 리스트 생성
+                Toast.makeText(MainActivity.getContext(), "채널 검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
                 _searchvideo.value = mutableListOf()
             }
             _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
