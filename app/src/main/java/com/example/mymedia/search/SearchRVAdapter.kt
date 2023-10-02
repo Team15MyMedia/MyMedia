@@ -2,24 +2,27 @@ package com.example.mymedia.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.RvSearchItemBinding
 
 
-class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.ViewHolder>() {
+class SearchRVAdapter : ListAdapter<VideoItem, SearchRVAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<VideoItem>(){
 
-    private val list = ArrayList<VideoItem>()
+        override fun areItemsTheSame(oldItem: VideoItem, newItem: VideoItem): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    fun addItems(videoItems: List<VideoItem>) {
-        list.addAll(videoItems)
-        notifyDataSetChanged()
+        override fun areContentsTheSame(oldItem: VideoItem, newItem: VideoItem): Boolean {
+            return oldItem == newItem
+        }
+
     }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -28,7 +31,7 @@ class SearchRVAdapter : RecyclerView.Adapter<SearchRVAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val item = getItem(position)
         holder.bind(item)
     }
 

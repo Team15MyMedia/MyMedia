@@ -70,11 +70,11 @@ class SearchFragmentResult(text: String) : Fragment() {
 
     private fun initModel() = with(binding) {
         searchViewModel.searchvideo.observe(viewLifecycleOwner) { itemList ->
-            videosListAdapter.addItems(itemList.toMutableList())
+            videosListAdapter.submitList(itemList.toMutableList())
         }
 
         searchViewModel.categoryChannel.observe(viewLifecycleOwner) { itemList ->
-            channelListAdapter.addItems(itemList.toMutableList())
+            channelListAdapter.submitList(itemList.toMutableList())
         }
     }
 
