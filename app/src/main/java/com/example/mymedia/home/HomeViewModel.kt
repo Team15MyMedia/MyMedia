@@ -47,6 +47,9 @@ class HomeViewModel(
 
         getCategoryList()
         _curCategory.value = 0
+
+        // API 절약을 위한 주석
+//        searchMostVideo()
     }
 
     fun showDetail(videoItem: VideoItem, context: Context) {
@@ -57,7 +60,7 @@ class HomeViewModel(
         context.startActivity(intent)
     }
 
-    fun searchMostVideo() {
+    private fun searchMostVideo() {
         viewModelScope.launch {
             val list = mutableListOf<MediaItem>()
             // Video
@@ -109,7 +112,7 @@ class HomeViewModel(
         }
     }
 
-    fun getCategoryList() {
+    private fun getCategoryList() {
         viewModelScope.launch {
             val list = mutableListOf<Category>()
             // Video
@@ -127,6 +130,17 @@ class HomeViewModel(
 
     fun setCurCategory(position: Int) {
         _curCategory.value = position
+    }
+
+    fun reorganizeOrder() {
+        val currentData = _categoryVideo.value
+
+        if (currentData != null && currentData.size > 1) {
+            val firstItem = currentData[0]
+            val newData = currentData.subList(1, currentData.size).toMutableList()
+            newData.add(firstItem)
+            _categoryVideo.value = newData
+        }
     }
 }
 
