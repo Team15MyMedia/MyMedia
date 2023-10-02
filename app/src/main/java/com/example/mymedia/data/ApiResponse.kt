@@ -74,7 +74,10 @@ data class Snippet(
     val channelTitle: String?,
 
     @SerializedName("liveBroadcastContent")
-    val liveBroadcastContent: String?
+    val liveBroadcastContent: String?,
+
+    @SerializedName("assignable")
+    val assignable: Boolean?
 )
 
 data class Thumbnails(
