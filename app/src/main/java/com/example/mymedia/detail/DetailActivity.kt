@@ -47,8 +47,8 @@ class DetailActivity : AppCompatActivity() {
 
         val shareButton: ImageView = findViewById(R.id.imageButton4)
         shareButton.setOnClickListener {
-            val thumbnailUrl = intent.getStringExtra("videoThumbnail")
-            shareVideo(thumbnailUrl)
+
+            shareVideo(imageUrl)
         }
     }
 
