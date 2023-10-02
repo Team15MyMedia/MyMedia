@@ -11,7 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymedia.data.ItemRepository
+import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentSearchResultBinding
+import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 
 class SearchFragmentResult() : Fragment() {
 
@@ -66,11 +68,18 @@ class SearchFragmentResult() : Fragment() {
         rvVideos.adapter = videosListAdapter
         rvVideos.layoutManager = GridLayoutManager(requireContext(), 3)
 
+        videosListAdapter.setOnItemLongClickListener(object : SearchResultVideoRVAdapter.OnItemLongClickListener{
+            override fun onItemLongClick(videoItem: VideoItem) {
+                searchViewModel.showDetail(videoItem, requireContext())
+            }
+        })
+
     }
 
     private fun initModel() = with(binding) {
 
         searchViewModel.searchvideo.observe(viewLifecycleOwner) { itemList ->
+            Log.d("videoitemList", itemList.toString())
             videosListAdapter.submitList(itemList.toMutableList())
         }
 

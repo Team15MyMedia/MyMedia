@@ -24,6 +24,18 @@ class SearchResultVideoRVAdapter : ListAdapter<VideoItem, SearchResultVideoRVAda
     }
 ) {
 
+    // 롱클릭 리스너 인터페이스 정의
+    interface OnItemLongClickListener {
+        fun onItemLongClick(videoItem: VideoItem)
+    }
+
+    private var onItemLongClickListener: OnItemLongClickListener? = null
+
+    // 롱클릭 리스너 설정 메서드
+    fun setOnItemLongClickListener(listener: OnItemLongClickListener) {
+        this.onItemLongClickListener = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             RvVideosItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -35,12 +47,17 @@ class SearchResultVideoRVAdapter : ListAdapter<VideoItem, SearchResultVideoRVAda
         holder.bind(item)
     }
 
-    class ViewHolder(private val binding: RvVideosItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: RvVideosItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(videoItem: VideoItem) = with(binding) {
 
             Glide.with(root.context)
                 .load(videoItem.thumbnail)
-                .into(ivVidoes)
+                .into(ivVideos)
+
+            itemView.setOnLongClickListener {
+                onItemLongClickListener?.onItemLongClick(videoItem)
+                true
+            }
         }
     }
 
