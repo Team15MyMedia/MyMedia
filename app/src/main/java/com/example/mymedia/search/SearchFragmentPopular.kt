@@ -58,7 +58,7 @@ class SearchFragmentPopular : Fragment() {
         listAdapter.setOnItemLongClickListener(object :
             SearchRVAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
+                // 롱클릭 이벤트 처리입니다.
                 searchViewModel.showDetail(videoItem, requireContext())
             }
         })
