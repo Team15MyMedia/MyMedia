@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mymedia.data.Category
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
@@ -81,11 +82,27 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView() = with(binding) {
-        // videoRecyclerView 설정
-        videoRecyclerView.adapter = categoryVideoListAdapter
-        val videoLayoutManager =
+        // categoryRecyclerView 설정
+        categoryRecyclerView.adapter = categoryVideoListAdapter
+        val categoryVideoLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        videoRecyclerView.layoutManager = videoLayoutManager
+        categoryRecyclerView.layoutManager = categoryVideoLayoutManager
+
+        // categoryRecyclerView 스크롤 이벤트 감지
+        categoryRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val lastVisibleItemPosition =
+                    categoryVideoLayoutManager.findLastCompletelyVisibleItemPosition()
+
+                val itemCount = categoryVideoListAdapter.itemCount
+
+                // 스크롤이 마지막에 도달하기 2번째 전일때 처리
+                if (lastVisibleItemPosition == itemCount - 2 && itemCount >= 2) {
+                    homeViewModel.reorganizeOrder("category")
+                }
+            }
+        })
 
         // channelRecyclerView 설정
         channelRecyclerView.adapter = channelListAdapter
@@ -93,11 +110,42 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         channelRecyclerView.layoutManager = channelLayoutManager
 
+        // channelRecyclerView 스크롤 이벤트 감지
+        channelRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val lastVisibleItemPosition =
+                    channelLayoutManager.findLastCompletelyVisibleItemPosition()
+
+                val itemCount = channelListAdapter.itemCount
+
+                // 스크롤이 마지막에 도달하기 2번째 전일때 처리
+                if (lastVisibleItemPosition == itemCount - 2 && itemCount >= 2) {
+                    homeViewModel.reorganizeOrder("channel")
+                }
+            }
+        })
+
         // mostRecyclerView 설정
         mostRecyclerView.adapter = mostListAdapter
         val mostLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         mostRecyclerView.layoutManager = mostLayoutManager
+
+        mostRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val lastVisibleItemPosition =
+                    mostLayoutManager.findLastCompletelyVisibleItemPosition()
+
+                val itemCount = mostListAdapter.itemCount
+
+                // 스크롤이 마지막에 도달하기 2번째 전일때 처리
+                if (lastVisibleItemPosition == itemCount - 2 && itemCount >= 2) {
+                    homeViewModel.reorganizeOrder("most")
+                }
+            }
+        })
 
         // spinner 설정
         setSpinner(
@@ -110,8 +158,6 @@ class HomeFragment : Fragment() {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
                 homeViewModel.showDetail(videoItem, requireContext())
-                //               homeViewModel.searchByCategory()
-                homeViewModel.getCategoryList()
             }
         })
     }

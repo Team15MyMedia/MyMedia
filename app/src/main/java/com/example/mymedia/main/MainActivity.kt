@@ -1,5 +1,6 @@
 package com.example.mymedia.main
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.mymedia.R
@@ -12,10 +13,20 @@ class MainActivity : AppCompatActivity() {
     private val viewPager by lazy { binding.viewPager }
     private val tabLayout by lazy { binding.tabLayout }
 
+    companion object {
+        private var context: Context? = null
+
+        fun getContext(): Context? {
+            return context
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        context = applicationContext
+
         initView()
     }
 
@@ -83,4 +94,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }

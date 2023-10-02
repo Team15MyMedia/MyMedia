@@ -12,6 +12,7 @@ interface RetrofitApi {
         @Query("q") query: String,
         @Query("type") type: String = "video",
         @Query("part") part: String = "snippet",
+        @Query("regionCode") regionCode: String = "KR",
         @Query("maxResults") maxResults: Int = 25,
     ): Response<ApiResponse<SearchItem>>
 
@@ -21,16 +22,18 @@ interface RetrofitApi {
         @Query("chart") chart: String = "mostPopular",
         @Query("type") type: String = "video",
         @Query("part") part: String = "snippet",
+        @Query("regionCode") regionCode: String = "KR",
         @Query("maxResults") maxResults: Int = 25,
     ): Response<ApiResponse<SearchItem>>
 
     @GET("search")
-    suspend fun searchCategory(
+    suspend fun searchChannel(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
         @Query("q") query: String,
         @Query("order") chart: String = "viewCount",
         @Query("type") type: String = "channel",
         @Query("part") part: String = "snippet",
+        @Query("regionCode") regionCode: String = "KR",
         @Query("maxResults") maxResults: Int = 25,
     ): Response<ApiResponse<SearchItem>>
 
@@ -41,7 +44,7 @@ interface RetrofitApi {
         @Query("chart") chart: String = "mostPopular",
         @Query("regionCode") regionCode: String = "KR",
         @Query("videoCategoryId") videoCategoryId: String,
-        @Query("maxResults") maxResults: Int = 10,
+        @Query("maxResults") maxResults: Int = 50,
     ): Response<ApiResponse<NoneSearchItem>>
 
     @GET("videoCategories")

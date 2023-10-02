@@ -1,6 +1,8 @@
 package com.example.mymedia.search
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +23,20 @@ class SearchFragment : Fragment() {
         fun newInstance() = SearchFragment()
     }
 
+
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-//    private val searchResultFragment by lazy {
-//        SearchFragmentResult.newInstance()
-//    }
+    private val searchResultFragment by lazy {
+        SearchFragmentResult.newInstance()
+    }
+
+    private val searchViewModel by lazy {
+        ViewModelProvider(
+            requireActivity(), SearchViewModelFactory2(ItemRepository())
+        )[SearchViewModel::class.java]
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,14 +58,15 @@ class SearchFragment : Fragment() {
 
         imbSearch.setOnClickListener {
 
-            //수정 -> 기존 프래그먼트 사용
-            val fragmentResult = SearchFragmentResult(edtSearch.text.toString())
+            searchViewModel.searchVideo(edtSearch.text.toString())
+            searchViewModel.searchChannel(edtSearch.text.toString())
+
+            val fragmentResult = searchResultFragment
             val transaction = requireFragmentManager().beginTransaction()
 
             transaction.replace(R.id.fragmentContainerView, fragmentResult)
             transaction.addToBackStack(null)
             transaction.commit()
-
 
         }
 
