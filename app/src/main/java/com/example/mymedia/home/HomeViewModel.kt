@@ -47,6 +47,9 @@ class HomeViewModel(
 
         getCategoryList()
         _curCategory.value = 0
+
+        // API 절약을 위한 주석
+//        searchMostVideo()
     }
 
     fun showDetail(videoItem: VideoItem, context: Context) {
@@ -57,7 +60,7 @@ class HomeViewModel(
         context.startActivity(intent)
     }
 
-    fun searchMostVideo() {
+    private fun searchMostVideo() {
         viewModelScope.launch {
             val list = mutableListOf<MediaItem>()
             // Video
@@ -109,7 +112,7 @@ class HomeViewModel(
         }
     }
 
-    fun getCategoryList() {
+    private fun getCategoryList() {
         viewModelScope.launch {
             val list = mutableListOf<Category>()
             // Video
@@ -127,6 +130,49 @@ class HomeViewModel(
 
     fun setCurCategory(position: Int) {
         _curCategory.value = position
+    }
+
+    fun reorganizeOrder(type: String) {
+        val currentData = when (type) {
+            "most" -> {
+                _most.value?.toMutableList() ?: mutableListOf()
+            }
+
+            "channel" -> {
+                _categoryChannel.value?.toMutableList() ?: mutableListOf()
+            }
+
+            "category" -> {
+                _categoryVideo.value?.toMutableList() ?: mutableListOf()
+            }
+
+            else -> return
+        }
+
+        if (currentData.size > 1) {
+            val firstHalf = currentData.subList(0, currentData.size / 2)
+            val secondHalf = currentData.subList(currentData.size / 2, currentData.size)
+
+            val newData = mutableListOf<MediaItem>()
+            newData.addAll(secondHalf)
+            newData.addAll(firstHalf)
+
+            when (type) {
+                "most" -> {
+                    _most.value = newData.filterIsInstance<VideoItem>().toMutableList()
+                }
+
+                "channel" -> {
+                    _categoryChannel.value = newData.filterIsInstance<ChannelItem>().toMutableList()
+                }
+
+                "category" -> {
+                    _categoryVideo.value = newData.filterIsInstance<VideoItem>().toMutableList()
+                }
+
+                else -> return
+            }
+        }
     }
 }
 
