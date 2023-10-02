@@ -54,6 +54,14 @@ class SearchFragmentPopular : Fragment() {
         rvPopularTop10.layoutManager = LinearLayoutManager(requireContext())
 
         searchViewModel.searchMostVideo()
+
+        listAdapter.setOnItemLongClickListener(object :
+            SearchRVAdapter.OnItemLongClickListener {
+            override fun onItemLongClick(videoItem: VideoItem) {
+                // 롱클릭 이벤트 처리
+                searchViewModel.showDetail(videoItem, requireContext())
+            }
+        })
     }
 
     private fun initModel() = with(binding) {

@@ -1,5 +1,7 @@
 package com.example.mymedia.search
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -12,6 +14,7 @@ import com.example.mymedia.data.Data
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.MediaItem
 import com.example.mymedia.data.VideoItem
+import com.example.mymedia.detail.DetailActivity
 import com.example.mymedia.home.HomeViewModel
 import com.example.mymedia.main.MainActivity
 import kotlinx.coroutines.launch
@@ -75,10 +78,13 @@ class SearchViewModel(
                     }
 
                     list.addAll(itemList)
+
+                    Log.d("videolist", list.toString())
                 } else {
                     // null일 시 공백 리스트 생성
                     _searchvideo.value = mutableListOf()
                 }
+                _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
             }
         }
     }
@@ -109,6 +115,15 @@ class SearchViewModel(
             }
         }
     }
+
+    fun showDetail(videoItem: VideoItem, context: Context) {
+        val intent = Intent(context, DetailActivity::class.java)
+        intent.putExtra("videoThumbnail", videoItem.thumbnail)
+        intent.putExtra("videoTitle", videoItem.title)
+        intent.putExtra("videoDescription", videoItem.description)
+        context.startActivity(intent)
+    }
+
 }
 
 class SearchViewModelFactory2(
