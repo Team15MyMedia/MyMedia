@@ -152,6 +152,8 @@ class ItemRepository {
             val categoryList = mutableListOf<Category>()
 
             categoryResponse?.items?.forEach { items ->
+                if (items.snippet?.assignable == false) return@forEach
+
                 val category = Category(
                     id = items.id ?: "0",
                     title = items.snippet?.title ?: "none-title",
