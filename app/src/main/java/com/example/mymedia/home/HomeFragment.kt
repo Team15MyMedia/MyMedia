@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
         Category("6", "최근에 업로드 된 영상")
     )
 
-    // 두 번째 값만 추출한 배열
+    // test 두 번째 값만 추출한 배열
     private val spinnerItems: Array<String> = categories.map { it.title }.toTypedArray()
 
 
@@ -109,8 +109,8 @@ class HomeFragment : Fragment() {
             HomeCategoryVideoListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
-               homeViewModel.showDetail(videoItem,requireContext())
- //               homeViewModel.searchByCategory()
+                homeViewModel.showDetail(videoItem, requireContext())
+                //               homeViewModel.searchByCategory()
                 homeViewModel.getCategoryList()
             }
         })
@@ -167,7 +167,6 @@ class HomeFragment : Fragment() {
                 position: Int,
                 l: Long
             ) {
-                (adapterView.getChildAt(0) as TextView).setTextColor(Color.WHITE)
                 val items = homeViewModel.categoryList.value?.map { it.title }?.toTypedArray()
                     ?: spinnerItems
                 val selectedItem = items[position]
@@ -175,10 +174,14 @@ class HomeFragment : Fragment() {
                 val categoryId = category?.find { it.title == selectedItem }?.id ?: "1"
 
                 homeViewModel.searchByCategory(categoryId)
+                homeViewModel.setCurCategory(position)
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>?) {}
         }
+
+        // 초기 선택값 설정
+        spinner.setSelection(homeViewModel.curCategory.value ?: 0)
     }
 
     override fun onDestroyView() {
