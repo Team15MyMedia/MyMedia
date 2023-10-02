@@ -1,5 +1,6 @@
 package com.example.mymedia.search
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,9 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.databinding.FragmentSearchResultBinding
 
-class SearchFragmentResult(text: String) : Fragment() {
+class SearchFragmentResult() : Fragment() {
 
-    private val searchText = text
+    companion object{
+        fun newInstance() = SearchFragmentResult()
+    }
 
 
     private var _binding: FragmentSearchResultBinding? = null
@@ -30,7 +33,7 @@ class SearchFragmentResult(text: String) : Fragment() {
 
     private val searchViewModel by lazy {
         ViewModelProvider(
-            this, SearchViewModelFactory2(ItemRepository())
+            requireActivity(), SearchViewModelFactory2(ItemRepository())
         )[SearchViewModel::class.java]
     }
 
@@ -45,6 +48,7 @@ class SearchFragmentResult(text: String) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initView()
         initModel()
     }
@@ -62,18 +66,15 @@ class SearchFragmentResult(text: String) : Fragment() {
         rvVideos.adapter = videosListAdapter
         rvVideos.layoutManager = GridLayoutManager(requireContext(), 3)
 
-
-        searchViewModel.searchVideo(searchText)
-        searchViewModel.searchByCategory(searchText)
-
     }
 
     private fun initModel() = with(binding) {
+
         searchViewModel.searchvideo.observe(viewLifecycleOwner) { itemList ->
             videosListAdapter.submitList(itemList.toMutableList())
         }
 
-        searchViewModel.categoryChannel.observe(viewLifecycleOwner) { itemList ->
+        searchViewModel.searchChannel.observe(viewLifecycleOwner) { itemList ->
             channelListAdapter.submitList(itemList.toMutableList())
         }
     }
