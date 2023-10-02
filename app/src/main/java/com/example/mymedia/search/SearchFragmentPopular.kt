@@ -63,7 +63,7 @@ class SearchFragmentPopular : Fragment() {
             for(i in 0 .. 9){
                 item10List.add(itemList[i])
             }
-            listAdapter.addItems(item10List)
+            listAdapter.submitList(item10List.toMutableList())
         }
     }
 
