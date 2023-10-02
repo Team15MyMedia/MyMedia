@@ -132,14 +132,46 @@ class HomeViewModel(
         _curCategory.value = position
     }
 
-    fun reorganizeOrder() {
-        val currentData = _categoryVideo.value
+    fun reorganizeOrder(type: String) {
+        val currentData = when (type) {
+            "most" -> {
+                _most.value?.toMutableList() ?: mutableListOf()
+            }
 
-        if (currentData != null && currentData.size > 1) {
-            val firstItem = currentData[0]
-            val newData = currentData.subList(1, currentData.size).toMutableList()
-            newData.add(firstItem)
-            _categoryVideo.value = newData
+            "channel" -> {
+                _categoryChannel.value?.toMutableList() ?: mutableListOf()
+            }
+
+            "category" -> {
+                _categoryVideo.value?.toMutableList() ?: mutableListOf()
+            }
+
+            else -> return
+        }
+
+        if (currentData.size > 1) {
+            val firstHalf = currentData.subList(0, currentData.size / 2)
+            val secondHalf = currentData.subList(currentData.size / 2, currentData.size)
+
+            val newData = mutableListOf<MediaItem>()
+            newData.addAll(secondHalf)
+            newData.addAll(firstHalf)
+
+            when (type) {
+                "most" -> {
+                    _most.value = newData.filterIsInstance<VideoItem>().toMutableList()
+                }
+
+                "channel" -> {
+                    _categoryChannel.value = newData.filterIsInstance<ChannelItem>().toMutableList()
+                }
+
+                "category" -> {
+                    _categoryVideo.value = newData.filterIsInstance<VideoItem>().toMutableList()
+                }
+
+                else -> return
+            }
         }
     }
 }
