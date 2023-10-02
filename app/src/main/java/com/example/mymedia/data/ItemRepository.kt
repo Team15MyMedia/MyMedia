@@ -28,12 +28,18 @@ class ItemRepository {
     }
 
     suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
-        return fetchItemList{
-                RetrofitInstance.api.searchMostPopularVideos(
-                    chart = "mostPopular",
-                    maxResults = 25,
-                )
-            }
+        return fetchItemList {
+            RetrofitInstance.api.searchMostPopularVideos(
+                chart = "mostPopular",
+                maxResults = 25,
+            )
+        }
+    }
+
+    suspend fun findMostLiveVideo(): Response<MutableList<MediaItem>> {
+        return fetchItemList {
+            RetrofitInstance.api.searchMostPopularLiveVideos()
+        }
     }
 
     suspend fun findCategoryList(): Response<MutableList<Category>> {
@@ -43,11 +49,11 @@ class ItemRepository {
     }
 
     suspend fun searchVideo(text: String): Response<MutableList<MediaItem>> {
-        return fetchItemList{
-                RetrofitInstance.api.searchVideos(
-                    query = text
-                )
-            }
+        return fetchItemList {
+            RetrofitInstance.api.searchVideos(
+                query = text
+            )
+        }
     }
 
     suspend fun searchChannel(text: String): Response<MutableList<MediaItem>> {
@@ -62,8 +68,6 @@ class ItemRepository {
         fetchFunction: () -> Response<ApiResponse<SearchItem>>,
     ): Response<MutableList<MediaItem>> {
         val response = fetchFunction()
-
-        Log.d("response", response.toString())
 
         if (response.isSuccessful) {
             val videoResponse = response.body()
@@ -110,10 +114,17 @@ class ItemRepository {
 
             // response.code : 200은 성공, 429는 사용자가 주어진 시간 동안 너무 많은 요청을 보냈음, 403은 클라이언트 오류 상태 응답 코드는 서버에 요청이 전달되었지만, 권한 때문에 거절
             if (response.code() == 403 || response.code() == 429) {
-                Toast.makeText(MainActivity.getContext(), "API 호출 제한 오류! 나중에 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    MainActivity.getContext(),
+                    "API 호출 제한 오류! 나중에 다시 시도해주세요.",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
-                Log.d("errorMessage", response.message().toString())
-                Toast.makeText(MainActivity.getContext(), "네트워크 오류! 에러 코드 ${response.code()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    MainActivity.getContext(),
+                    "네트워크 오류! 에러 코드 ${response.code()}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
             return Response.error(response.code(), response.errorBody())

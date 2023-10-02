@@ -2,7 +2,6 @@ package com.example.mymedia.home
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,7 +20,7 @@ class HomeViewModel(
     private val repository: ItemRepository,
 ) : ViewModel() {
 
-    private val apiSavingMode = Data.apiSavingMode
+    private val apiSavingMode = false
 
     private val _categoryVideo = MutableLiveData<MutableList<VideoItem>>()
     val categoryVideo: LiveData<MutableList<VideoItem>>
@@ -40,6 +39,11 @@ class HomeViewModel(
         get() = _categoryList
 
     private val _curCategory = MutableLiveData<Int>()
+
+    private val _mostLive = MutableLiveData<MutableList<VideoItem>>()
+    val mostLive: LiveData<MutableList<VideoItem>>
+        get() = _mostLive
+
     val curCategory: LiveData<Int>
         get() = _curCategory
 
@@ -48,9 +52,12 @@ class HomeViewModel(
         _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
         _curCategory.value = 0
 
+        _mostLive.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
+
         if (!apiSavingMode) {
             getCategoryList()
             searchMostVideo()
+            searchMostLiveVideo()
         }
     }
 
@@ -76,6 +83,24 @@ class HomeViewModel(
                     _most.value = mutableListOf()
                 }
                 _most.value = list.filterIsInstance<VideoItem>().toMutableList()
+            }
+        }
+    }
+
+    private fun searchMostLiveVideo() {
+        if (!apiSavingMode) {
+            viewModelScope.launch {
+                val list = mutableListOf<MediaItem>()
+                // Video
+                val responseVideo = repository.findMostLiveVideo()
+                if (responseVideo.isSuccessful) {
+                    val itemList = responseVideo.body() ?: mutableListOf()
+                    list.addAll(itemList)
+                } else {
+                    // null일 시 공백 리스트 생성
+                    _mostLive.value = mutableListOf()
+                }
+                _mostLive.value = list.filterIsInstance<VideoItem>().toMutableList()
             }
         }
     }

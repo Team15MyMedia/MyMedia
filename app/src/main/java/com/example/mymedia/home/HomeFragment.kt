@@ -14,14 +14,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mymedia.data.Category
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
+import com.example.mymedia.home.adapter.HomeBannerListAdapter
+import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
 import com.example.mymedia.home.adapter.HomeMostViewListAdapter
-import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 
 
 class HomeFragment : Fragment() {
@@ -43,6 +45,10 @@ class HomeFragment : Fragment() {
 
     private val mostListAdapter by lazy {
         HomeMostViewListAdapter()
+    }
+
+    private val bannerListAdapter by lazy {
+        HomeBannerListAdapter()
     }
 
     private val homeViewModel by lazy {
@@ -82,6 +88,28 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView() = with(binding) {
+        // bannerRecyclerView 설정
+        bannerRecyclerView.adapter = bannerListAdapter
+        val bannerVideoLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        bannerRecyclerView.layoutManager = bannerVideoLayoutManager
+
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(bannerRecyclerView)
+
+        val listener = SnapPagerScrollListener(
+            snapHelper,
+            SnapPagerScrollListener.ON_SCROLL,
+            true,
+            object : SnapPagerScrollListener.OnChangeListener {
+                override fun onSnapped(position: Int) {
+                    // position을 받아서 이벤트 처리
+                }
+            }
+        )
+        bannerRecyclerView.addOnScrollListener(listener)
+        bannerRecyclerView.addItemDecoration(LinePagerIndicatorDecoration())
+
         // categoryRecyclerView 설정
         categoryRecyclerView.adapter = categoryVideoListAdapter
         val categoryVideoLayoutManager =
@@ -163,6 +191,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun initModel() = with(binding) {
+        homeViewModel.mostLive.observe(viewLifecycleOwner) { itemList ->
+            bannerListAdapter.submitList(itemList.toMutableList())
+        }
         homeViewModel.categoryVideo.observe(viewLifecycleOwner) { itemList ->
             categoryVideoListAdapter.submitList(itemList.toMutableList())
         }
