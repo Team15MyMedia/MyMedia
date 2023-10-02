@@ -1,6 +1,5 @@
 package com.example.mymedia.data
 
-import android.util.Log
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -48,7 +47,7 @@ class ItemRepository {
 
     suspend fun searchChannel(text: String): Response<MutableList<MediaItem>> {
         return fetchItemList {
-            RetrofitInstance.api.searchCategory(
+            RetrofitInstance.api.searchChannel(
                 query = text
             )
         }
