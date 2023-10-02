@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mymedia.R
-import com.example.mymedia.databinding.VideoItemBinding
+import com.example.mymedia.databinding.RvHomeVideoItemBinding
 
 class HomeMostViewListAdapter :
     ListAdapter<VideoItem, HomeMostViewListAdapter.ViewHolder>(
@@ -42,7 +41,7 @@ class HomeMostViewListAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            VideoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RvHomeVideoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -52,7 +51,7 @@ class HomeMostViewListAdapter :
     }
 
     inner class ViewHolder(
-        private val binding: VideoItemBinding,
+        private val binding: RvHomeVideoItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(videoItem: VideoItem) {
