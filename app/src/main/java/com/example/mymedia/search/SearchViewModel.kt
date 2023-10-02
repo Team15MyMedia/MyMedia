@@ -1,5 +1,7 @@
 package com.example.mymedia.search
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -12,6 +14,7 @@ import com.example.mymedia.data.Data
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.MediaItem
 import com.example.mymedia.data.VideoItem
+import com.example.mymedia.detail.DetailActivity
 import com.example.mymedia.home.HomeViewModel
 import com.example.mymedia.main.MainActivity
 import kotlinx.coroutines.launch
@@ -19,6 +22,8 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val repository: ItemRepository,
 ) : ViewModel() {
+
+    private val apiSavingMode = Data.apiSavingMode
 
     private val _searchvideo = MutableLiveData<MutableList<VideoItem>>()
     val searchvideo: LiveData<MutableList<VideoItem>>
@@ -37,54 +42,86 @@ class SearchViewModel(
     }
 
     fun searchMostVideo() {
-        viewModelScope.launch {
-            val list = mutableListOf<MediaItem>()
-            // Video
-            val responseVideo = repository.findMostVideo()
-            if (responseVideo.isSuccessful) {
-                val itemList = responseVideo.body() ?: mutableListOf()
-                list.addAll(itemList)
-            } else {
-                // null일 시 공백 리스트 생성
-                _most.value = mutableListOf()
+        if (!apiSavingMode) {
+            viewModelScope.launch {
+                val list = mutableListOf<MediaItem>()
+                // Video
+                val responseVideo = repository.findMostVideo()
+                if (responseVideo.isSuccessful) {
+                    val itemList = responseVideo.body() ?: mutableListOf()
+                    list.addAll(itemList)
+                } else {
+                    // null일 시 공백 리스트 생성
+                    _most.value = mutableListOf()
+                }
+                _most.value = list.filterIsInstance<VideoItem>().toMutableList()
             }
-            _most.value = list.filterIsInstance<VideoItem>().toMutableList()
         }
     }
 
     fun searchVideo(text: String) {
-        viewModelScope.launch {
-            val list = mutableListOf<MediaItem>()
-            // Video
-            val responseVideo = repository.searchVideo(text)
-            if (responseVideo.isSuccessful) {
-                val itemList = responseVideo.body() ?: mutableListOf()
-                list.addAll(itemList)
-            } else {
-                // null일 시 공백 리스트 생성
-                Toast.makeText(MainActivity.getContext(), "검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
-                _searchvideo.value = mutableListOf()
+        if (!apiSavingMode) {
+            viewModelScope.launch {
+                val list = mutableListOf<MediaItem>()
+                // Video
+                val responseVideo = repository.searchVideo(text)
+                if (responseVideo.isSuccessful) {
+                    var itemList = responseVideo.body() ?: mutableListOf()
+
+                    if (itemList.isNullOrEmpty()) {
+                        Toast.makeText(
+                            MainActivity.getContext(),
+                            "비디오 검색 결과가 없습니다!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        itemList = mutableListOf()
+                    }
+
+                    list.addAll(itemList)
+
+                    Log.d("videolist", list.toString())
+                } else {
+                    // null일 시 공백 리스트 생성
+                    _searchvideo.value = mutableListOf()
+                }
+                _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
             }
-            _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
         }
     }
 
     fun searchChannel(text: String) {
-        viewModelScope.launch {
-            val list = mutableListOf<MediaItem>()
-            // Video
-            val responseVideo = repository.searchChannel(text)
-            if (responseVideo.isSuccessful) {
-                val itemList = responseVideo.body() ?: mutableListOf()
-                list.addAll(itemList)
-                Log.d("resultlist", list.toString())
-            } else {
-                _searchChannel.value = mutableListOf()
+        if (!apiSavingMode) {
+            viewModelScope.launch {
+                val list = mutableListOf<MediaItem>()
+                // Channel
+                val responseVideo = repository.searchChannel(text)
+                if (responseVideo.isSuccessful) {
+                    var itemList = responseVideo.body()
+
+                    if (itemList.isNullOrEmpty()) {
+                        Toast.makeText(
+                            MainActivity.getContext(),
+                            "채널 검색 결과가 없습니다!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        itemList = mutableListOf()
+                    }
+
+                    list.addAll(itemList)
+                } else {
+                    _searchChannel.value = mutableListOf()
+                }
+                _searchChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
             }
-            //수정
-            Toast.makeText(MainActivity.getContext(), "검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
-            _searchChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
         }
+    }
+
+    fun showDetail(videoItem: VideoItem, context: Context) {
+        val intent = Intent(context, DetailActivity::class.java)
+        intent.putExtra("videoThumbnail", videoItem.thumbnail)
+        intent.putExtra("videoTitle", videoItem.title)
+        intent.putExtra("videoDescription", videoItem.description)
+        context.startActivity(intent)
     }
 
 }

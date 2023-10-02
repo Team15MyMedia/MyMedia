@@ -8,6 +8,9 @@ object Data {
     private val favoriteData: MutableList<VideoItem> = mutableListOf()
     private val mediaData: MutableList<MediaItem> = mutableListOf()
 
+    // api 절약 모드
+    val apiSavingMode = true
+
     init {
         searchData.add(
             VideoItem(

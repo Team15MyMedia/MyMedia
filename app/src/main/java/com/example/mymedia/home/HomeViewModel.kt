@@ -21,6 +21,8 @@ class HomeViewModel(
     private val repository: ItemRepository,
 ) : ViewModel() {
 
+    private val apiSavingMode = Data.apiSavingMode
+
     private val _categoryVideo = MutableLiveData<MutableList<VideoItem>>()
     val categoryVideo: LiveData<MutableList<VideoItem>>
         get() = _categoryVideo
@@ -44,12 +46,12 @@ class HomeViewModel(
     init {
         _categoryVideo.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
         _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
-
-        getCategoryList()
         _curCategory.value = 0
 
-        // API 절약을 위한 주석
-//        searchMostVideo()
+        if (!apiSavingMode) {
+            getCategoryList()
+            searchMostVideo()
+        }
     }
 
     fun showDetail(videoItem: VideoItem, context: Context) {
@@ -61,70 +63,78 @@ class HomeViewModel(
     }
 
     private fun searchMostVideo() {
-        viewModelScope.launch {
-            val list = mutableListOf<MediaItem>()
-            // Video
-            val responseVideo = repository.findMostVideo()
-            if (responseVideo.isSuccessful) {
-                val itemList = responseVideo.body() ?: mutableListOf()
-                list.addAll(itemList)
-            } else {
-                // null일 시 공백 리스트 생성
-                _most.value = mutableListOf()
+        if (!apiSavingMode) {
+            viewModelScope.launch {
+                val list = mutableListOf<MediaItem>()
+                // Video
+                val responseVideo = repository.findMostVideo()
+                if (responseVideo.isSuccessful) {
+                    val itemList = responseVideo.body() ?: mutableListOf()
+                    list.addAll(itemList)
+                } else {
+                    // null일 시 공백 리스트 생성
+                    _most.value = mutableListOf()
+                }
+                _most.value = list.filterIsInstance<VideoItem>().toMutableList()
             }
-            _most.value = list.filterIsInstance<VideoItem>().toMutableList()
         }
     }
 
     fun searchByCategory(id: String) {
-        viewModelScope.launch {
-            val list = mutableListOf<MediaItem>()
-            // Video
-            val responseVideo = repository.findItemByCategory(id)
-            if (responseVideo.isSuccessful) {
-                val itemList = responseVideo.body() ?: mutableListOf()
-                list.addAll(itemList)
-            } else {
-                // null일 시 공백 리스트 생성
-                _categoryVideo.value = mutableListOf()
+        if (!apiSavingMode) {
+            viewModelScope.launch {
+                val list = mutableListOf<MediaItem>()
+                // Video
+                val responseVideo = repository.findItemByCategory(id)
+                if (responseVideo.isSuccessful) {
+                    val itemList = responseVideo.body() ?: mutableListOf()
+                    list.addAll(itemList)
+                } else {
+                    // null일 시 공백 리스트 생성
+                    _categoryVideo.value = mutableListOf()
+                }
+                _categoryVideo.value = list.filterIsInstance<VideoItem>().toMutableList()
+                searchChannelByID()
             }
-            _categoryVideo.value = list.filterIsInstance<VideoItem>().toMutableList()
-            searchChannelByID()
         }
     }
 
     private fun searchChannelByID() {
-        viewModelScope.launch {
-            val list = mutableListOf<MediaItem>()
-            val channelIdList = _categoryVideo.value?.map {
-                it.channelId
-            } ?: mutableListOf()
-            // Channel
-            for (id in channelIdList) {
-                val responseChannel = repository.findChannelByID(id)
+        if (!apiSavingMode) {
+            viewModelScope.launch {
+                val list = mutableListOf<MediaItem>()
+                val channelIdList = _categoryVideo.value?.map {
+                    it.channelId
+                } ?: mutableListOf()
+                // Channel
+                for (id in channelIdList) {
+                    val responseChannel = repository.findChannelByID(id)
 
-                if (responseChannel.isSuccessful) {
-                    val item = responseChannel.body() ?: continue
-                    list.add(item)
+                    if (responseChannel.isSuccessful) {
+                        val item = responseChannel.body() ?: continue
+                        list.add(item)
+                    }
                 }
+                _categoryChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
             }
-            _categoryChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
         }
     }
 
     private fun getCategoryList() {
-        viewModelScope.launch {
-            val list = mutableListOf<Category>()
-            // Video
-            val responseCategoryList = repository.findCategoryList()
-            if (responseCategoryList.isSuccessful) {
-                val categoryList = responseCategoryList.body() ?: mutableListOf()
-                list.addAll(categoryList)
-            } else {
-                // null일 시 공백 리스트 생성
-                _categoryList.value = mutableListOf()
+        if (!apiSavingMode) {
+            viewModelScope.launch {
+                val list = mutableListOf<Category>()
+                // Video
+                val responseCategoryList = repository.findCategoryList()
+                if (responseCategoryList.isSuccessful) {
+                    val categoryList = responseCategoryList.body() ?: mutableListOf()
+                    list.addAll(categoryList)
+                } else {
+                    // null일 시 공백 리스트 생성
+                    _categoryList.value = mutableListOf()
+                }
+                _categoryList.value = list
             }
-            _categoryList.value = list
         }
     }
 
