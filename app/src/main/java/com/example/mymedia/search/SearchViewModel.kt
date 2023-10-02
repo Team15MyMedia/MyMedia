@@ -58,11 +58,16 @@ class SearchViewModel(
             // Video
             val responseVideo = repository.searchVideo(text)
             if (responseVideo.isSuccessful) {
-                val itemList = responseVideo.body() ?: mutableListOf()
+                var itemList = responseVideo.body() ?: mutableListOf()
+
+                if(itemList.isNullOrEmpty()){
+                    Toast.makeText(MainActivity.getContext(), "비디오 검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
+                    itemList = mutableListOf()
+                }
+
                 list.addAll(itemList)
             } else {
                 // null일 시 공백 리스트 생성
-                Toast.makeText(MainActivity.getContext(), "검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
                 _searchvideo.value = mutableListOf()
             }
             _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
@@ -72,17 +77,20 @@ class SearchViewModel(
     fun searchChannel(text: String) {
         viewModelScope.launch {
             val list = mutableListOf<MediaItem>()
-            // Video
+            // Channel
             val responseVideo = repository.searchChannel(text)
             if (responseVideo.isSuccessful) {
-                val itemList = responseVideo.body() ?: mutableListOf()
+                var itemList = responseVideo.body()
+
+                if(itemList.isNullOrEmpty()){
+                    Toast.makeText(MainActivity.getContext(), "채널 검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
+                    itemList = mutableListOf()
+                }
+
                 list.addAll(itemList)
-                Log.d("resultlist", list.toString())
             } else {
                 _searchChannel.value = mutableListOf()
             }
-            //수정
-            Toast.makeText(MainActivity.getContext(), "검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
             _searchChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
         }
     }
