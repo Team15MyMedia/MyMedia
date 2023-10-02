@@ -1,60 +1,79 @@
 package com.example.mymedia.data
 
-import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.random.Random
 
 object Data {
-    private val searchData: MutableList<Item> = mutableListOf()
-    private val bookmarkData: MutableList<Item> = mutableListOf()
+    private val searchData: MutableList<VideoItem> = mutableListOf()
+    private val favoriteData: MutableList<VideoItem> = mutableListOf()
+    private val mediaData: MutableList<MediaItem> = mutableListOf()
 
     init {
+        searchData.add(
+            VideoItem(
+                "",
+                "",
+                "",
+                Date(),
+                "https://i.ytimg.com/vi/n3wr3IOO4N8/default.jpg",
+                false,
+                ""
+            )
+        )
         searchData.apply {
             repeat(10) {
-                val randomItem = generateRandomData()
+                val randomItem = generateRandomVideoData()
                 add(randomItem)
             }
         }
+        mediaData.apply {
+            repeat(5) {
+                val randomChannelItem = generateRandomChannelData()
+                add(randomChannelItem)
+                val randomVideoItem = generateRandomVideoData()
+                add(randomVideoItem)
+            }
+        }
+        //test
+        favoriteData.addAll(searchData)
     }
 
-    fun getSearchData(): MutableList<Item> {
+    fun getSearchData(): MutableList<VideoItem> {
         return searchData
     }
 
-    fun removeSearchItem(item: Item) {
-        searchData.remove(item)
+    fun getMediaData(): MutableList<MediaItem> {
+        return mediaData
     }
 
-    fun addSearchItem(item: Item) {
-        searchData.add(item)
+    fun removeSearchItem(videoItem: VideoItem) {
+        searchData.remove(videoItem)
     }
 
-    fun getBookmarkData(): MutableList<Item> {
-        return bookmarkData
+    fun addSearchItem(videoItem: VideoItem) {
+        searchData.add(videoItem)
     }
 
-    fun removeBookmarkItem(item: Item) {
-        bookmarkData.remove(item)
+    fun getFavoriteData(): MutableList<VideoItem> {
+        return favoriteData
     }
 
-    fun addBookmarkItem(item: Item) {
-        bookmarkData.add(item)
+    fun removeBookmarkItem(videoItem: VideoItem) {
+        favoriteData.remove(videoItem)
+    }
+
+    fun addBookmarkItem(videoItem: VideoItem) {
+        favoriteData.add(videoItem)
     }
 
 
     // 현재 시각을 가져오는 함수
-    fun getCurrentDateTime(): Date {
+    private fun getCurrentDateTime(): Date {
         return Date()
     }
 
-    // 날짜 포맷을 지정하는 함수
-    fun formatDate(date: Date): String {
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        return format.format(date)
-    }
-
     // 임의의 데이터를 생성하는 함수
-    fun generateRandomData(): Item {
+    private fun generateRandomVideoData(): VideoItem {
         val randomId = Random.nextInt(1, 100)
         val randomTitle = "Item $randomId"
         val randomUrl = "https://example.com/item/$randomId"
@@ -62,6 +81,32 @@ object Data {
         val randomThumbnail = "https://example.com/thumbnail/$randomId.jpg"
         val randomIsFavorite = Random.nextBoolean()
 
-        return Item(randomId, randomTitle, randomUrl, randomDatetime, randomThumbnail, randomIsFavorite)
+        return VideoItem(
+            "",
+            randomTitle,
+            randomUrl,
+            randomDatetime,
+            randomThumbnail,
+            randomIsFavorite,
+            ""
+        )
+    }
+
+    private fun generateRandomChannelData(): ChannelItem {
+        val randomId = Random.nextInt(1, 100)
+        val randomTitle = "Item $randomId"
+        val randomUrl = "https://example.com/item/$randomId"
+        val randomDatetime = getCurrentDateTime()
+        val randomThumbnail = "https://example.com/thumbnail/$randomId.jpg"
+        val randomIsFavorite = Random.nextBoolean()
+
+        return ChannelItem(
+            "",
+            randomTitle,
+            randomUrl,
+            randomDatetime,
+            randomThumbnail,
+            randomIsFavorite
+        )
     }
 }
