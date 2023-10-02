@@ -2,6 +2,8 @@ package com.example.mymedia.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mymedia.data.ChannelItem
@@ -9,19 +11,18 @@ import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.RvChannelItemBinding
 import com.example.mymedia.databinding.RvVideosItemBinding
 
-class SearchResultChannelRVAdapter : RecyclerView.Adapter<SearchResultChannelRVAdapter.ViewHolder>() {
+class SearchResultChannelRVAdapter : ListAdapter<ChannelItem, SearchResultChannelRVAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<ChannelItem>(){
+        override fun areItemsTheSame(oldItem: ChannelItem, newItem: ChannelItem): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    private val list = ArrayList<ChannelItem>()
+        override fun areContentsTheSame(oldItem: ChannelItem, newItem: ChannelItem): Boolean {
+            return oldItem == newItem
+        }
 
-    fun addItems(channelItems: List<ChannelItem>) {
-        list.addAll(channelItems)
-        notifyDataSetChanged()
     }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
-
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -30,7 +31,7 @@ class SearchResultChannelRVAdapter : RecyclerView.Adapter<SearchResultChannelRVA
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = list[position]
+        val item = getItem(position)
         holder.bind(item)
     }
 

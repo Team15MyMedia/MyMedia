@@ -1,5 +1,6 @@
 package com.example.mymedia.data
 
+import android.util.Log
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -99,6 +100,7 @@ class ItemRepository {
 
             return Response.success(mediaItemList)
         } else {
+            // response.code : 200은 성공, 404는 찾을 수 없는 리소스, 500은 서버 오류
             return Response.error(response.code(), response.errorBody())
         }
     }
