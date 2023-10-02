@@ -59,7 +59,7 @@ class SearchFragment : Fragment() {
         imbSearch.setOnClickListener {
 
             searchViewModel.searchVideo(edtSearch.text.toString())
-            searchViewModel.searchByCategory(edtSearch.text.toString())
+            searchViewModel.searchChannel(edtSearch.text.toString())
 
             val fragmentResult = searchResultFragment
             val transaction = requireFragmentManager().beginTransaction()

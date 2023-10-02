@@ -74,7 +74,7 @@ class SearchFragmentResult() : Fragment() {
             videosListAdapter.submitList(itemList.toMutableList())
         }
 
-        searchViewModel.categoryChannel.observe(viewLifecycleOwner) { itemList ->
+        searchViewModel.searchChannel.observe(viewLifecycleOwner) { itemList ->
             channelListAdapter.submitList(itemList.toMutableList())
         }
     }

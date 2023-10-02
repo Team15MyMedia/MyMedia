@@ -109,7 +109,7 @@ class ItemRepository {
         } else {
 
             // response.code : 200은 성공, 429는 사용자가 주어진 시간 동안 너무 많은 요청을 보냈음, 403은 클라이언트 오류 상태 응답 코드는 서버에 요청이 전달되었지만, 권한 때문에 거절
-            if (response.code() == 403 && response.code() == 429) {
+            if (response.code() == 403 || response.code() == 429) {
                 Toast.makeText(MainActivity.getContext(), "API 호출 제한 오류! 나중에 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
             } else {
                 Log.d("errorMessage", response.message().toString())

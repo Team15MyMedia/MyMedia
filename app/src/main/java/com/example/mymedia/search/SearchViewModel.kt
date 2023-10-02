@@ -28,12 +28,12 @@ class SearchViewModel(
     val most: LiveData<MutableList<VideoItem>>
         get() = _most
 
-    private val _categoryChannel = MutableLiveData<MutableList<ChannelItem>>()
-    val categoryChannel: LiveData<MutableList<ChannelItem>>
-        get() = _categoryChannel
+    private val _searchChannel = MutableLiveData<MutableList<ChannelItem>>()
+    val searchChannel: LiveData<MutableList<ChannelItem>>
+        get() = _searchChannel
 
     init {
-        _searchvideo.value = Data.getSearchData()
+        _most.value = Data.getSearchData()
     }
 
     fun searchMostVideo() {
@@ -46,7 +46,6 @@ class SearchViewModel(
                 list.addAll(itemList)
             } else {
                 // null일 시 공백 리스트 생성
-                Toast.makeText(MainActivity.getContext(), "비디오 검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
                 _most.value = mutableListOf()
             }
             _most.value = list.filterIsInstance<VideoItem>().toMutableList()
@@ -63,14 +62,14 @@ class SearchViewModel(
                 list.addAll(itemList)
             } else {
                 // null일 시 공백 리스트 생성
-                Toast.makeText(MainActivity.getContext(), "채널 검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(MainActivity.getContext(), "검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
                 _searchvideo.value = mutableListOf()
             }
             _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
         }
     }
 
-    fun searchByCategory(text: String) {
+    fun searchChannel(text: String) {
         viewModelScope.launch {
             val list = mutableListOf<MediaItem>()
             // Video
@@ -80,10 +79,11 @@ class SearchViewModel(
                 list.addAll(itemList)
                 Log.d("resultlist", list.toString())
             } else {
-                _categoryChannel.value = mutableListOf()
+                _searchChannel.value = mutableListOf()
             }
             //수정
-            _categoryChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
+            Toast.makeText(MainActivity.getContext(), "검색 결과가 없습니다!", Toast.LENGTH_SHORT).show()
+            _searchChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
         }
     }
 

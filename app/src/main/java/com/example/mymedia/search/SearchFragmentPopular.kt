@@ -58,7 +58,9 @@ class SearchFragmentPopular : Fragment() {
 
     private fun initModel() = with(binding) {
         searchViewModel.most.observe(viewLifecycleOwner) { itemList ->
-            listAdapter.submitList(itemList.subList(0,10).toMutableList())
+            if(!itemList.isNullOrEmpty()){
+                listAdapter.submitList(itemList.subList(0,10).toMutableList())
+            }
         }
     }
 
