@@ -22,12 +22,10 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private val _categoryVideo = MutableLiveData<MutableList<VideoItem>>()
-
     val categoryVideo: LiveData<MutableList<VideoItem>>
         get() = _categoryVideo
 
     private val _categoryChannel = MutableLiveData<MutableList<ChannelItem>>()
-
     val categoryChannel: LiveData<MutableList<ChannelItem>>
         get() = _categoryChannel
 
@@ -36,15 +34,19 @@ class HomeViewModel(
         get() = _most
 
     private val _categoryList = MutableLiveData<MutableList<Category>>()
-
     val categoryList: LiveData<MutableList<Category>>
         get() = _categoryList
+
+    private val _curCategory = MutableLiveData<Int>()
+    val curCategory: LiveData<Int>
+        get() = _curCategory
 
     init {
         _categoryVideo.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
         _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
 
         getCategoryList()
+        _curCategory.value = 0
     }
 
     fun showDetail(videoItem: VideoItem, context: Context) {
@@ -121,6 +123,10 @@ class HomeViewModel(
             }
             _categoryList.value = list
         }
+    }
+
+    fun setCurCategory(position: Int) {
+        _curCategory.value = position
     }
 }
 
