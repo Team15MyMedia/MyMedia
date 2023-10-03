@@ -8,10 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.RvSearchItemBinding
-import com.example.mymedia.databinding.VideoItemBinding
-import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
-import com.example.mymedia.home.getHighQualityThumbnailUrl
-
 
 class SearchRVAdapter : ListAdapter<VideoItem, SearchRVAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<VideoItem>(){

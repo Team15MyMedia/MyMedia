@@ -12,17 +12,17 @@ object Data {
     val apiSavingMode = true
 
     init {
-        searchData.add(
-            VideoItem(
-                "",
-                "",
-                "",
-                Date(),
-                "https://i.ytimg.com/vi/n3wr3IOO4N8/default.jpg",
-                false,
-                ""
-            )
-        )
+//        searchData.add(
+//            VideoItem(
+//                "",
+//                "",
+//                "",
+//                Date(),
+//                "https://i.ytimg.com/vi/n3wr3IOO4N8/default.jpg",
+//                false,
+//                ""
+//            )
+//        )
         searchData.apply {
             repeat(10) {
                 val randomItem = generateRandomVideoData()
@@ -81,7 +81,7 @@ object Data {
         val randomTitle = "Item $randomId"
         val randomUrl = "https://example.com/item/$randomId"
         val randomDatetime = getCurrentDateTime()
-        val randomThumbnail = "https://example.com/thumbnail/$randomId.jpg"
+        val randomThumbnail = "https://i.ytimg.com/vi/rkpdtLhSYpY/hqdefault_live.jpg"
         val randomIsFavorite = Random.nextBoolean()
 
         return VideoItem(

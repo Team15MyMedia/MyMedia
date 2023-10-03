@@ -76,10 +76,7 @@ class SearchViewModel(
                         ).show()
                         itemList = mutableListOf()
                     }
-
                     list.addAll(itemList)
-
-                    Log.d("videolist", list.toString())
                 } else {
                     // null일 시 공백 리스트 생성
                     _searchvideo.value = mutableListOf()

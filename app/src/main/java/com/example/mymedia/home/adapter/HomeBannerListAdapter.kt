@@ -2,26 +2,26 @@ package com.example.mymedia.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.example.mymedia.data.VideoItem
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mymedia.data.ChannelItem
-import com.example.mymedia.databinding.RvHomeChannelItemBinding
+import com.example.mymedia.databinding.RvHomeBannerItemBinding
 
-class HomeChannelListAdapter :
-    ListAdapter<ChannelItem, HomeChannelListAdapter.ViewHolder>(
-        object : DiffUtil.ItemCallback<ChannelItem>() {
+class HomeBannerListAdapter :
+    ListAdapter<VideoItem, HomeBannerListAdapter.ViewHolder>(
+        object : DiffUtil.ItemCallback<VideoItem>() {
             override fun areItemsTheSame(
-                oldVideoItem: ChannelItem,
-                newVideoItem: ChannelItem
+                oldVideoItem: VideoItem,
+                newVideoItem: VideoItem
             ): Boolean {
                 return oldVideoItem.id == newVideoItem.id
             }
 
             override fun areContentsTheSame(
-                oldVideoItem: ChannelItem,
-                newVideoItem: ChannelItem
+                oldVideoItem: VideoItem,
+                newVideoItem: VideoItem
             ): Boolean {
                 return oldVideoItem == newVideoItem
             }
@@ -29,7 +29,7 @@ class HomeChannelListAdapter :
 
     // 롱클릭 리스너 인터페이스 정의
     interface OnItemLongClickListener {
-        fun onItemLongClick(channelItem: ChannelItem)
+        fun onItemLongClick(videoItem: VideoItem)
     }
 
     private var onItemLongClickListener: OnItemLongClickListener? = null
@@ -41,7 +41,7 @@ class HomeChannelListAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvHomeChannelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RvHomeBannerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -51,19 +51,17 @@ class HomeChannelListAdapter :
     }
 
     inner class ViewHolder(
-        private val binding: RvHomeChannelItemBinding,
+        private val binding: RvHomeBannerItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(channelItem: ChannelItem) {
+        fun bind(videoItem: VideoItem) {
             with(binding) {
-                // 이미지 설정
                 Glide.with(itemView.context)
-                    .load(channelItem.thumbnail)
-                    .into(channelImageView)
-                channelImageView.clipToOutline = true
+                    .load(videoItem.thumbnail.replace("default_live.jpg", "hqdefault_live.jpg"))
+                    .into(bannerImg)
 
                 itemView.setOnLongClickListener {
-                    onItemLongClickListener?.onItemLongClick(channelItem)
+                    onItemLongClickListener?.onItemLongClick(videoItem)
                     true
                 }
             }
