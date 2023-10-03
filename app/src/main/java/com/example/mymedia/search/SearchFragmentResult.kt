@@ -68,8 +68,8 @@ class SearchFragmentResult() : Fragment() {
         rvVideos.adapter = videosListAdapter
         rvVideos.layoutManager = GridLayoutManager(requireContext(), 3)
 
-        videosListAdapter.setOnItemLongClickListener(object : SearchResultVideoRVAdapter.OnItemLongClickListener{
-            override fun onItemLongClick(videoItem: VideoItem) {
+        videosListAdapter.setOnItemClickListener(object : SearchResultVideoRVAdapter.OnItemClickListener{
+            override fun onItemClick(videoItem: VideoItem) {
                 searchViewModel.showDetail(videoItem, requireContext())
             }
         })

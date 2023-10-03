@@ -27,12 +27,17 @@ class ItemRepository {
         }
     }
 
+//    suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
+//        return fetchItemList{
+//                RetrofitInstance.api.searchMostPopularVideos(
+//                    maxResults = 25,
+//                )
+//            }
+//    }
+
     suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
-        return fetchItemList {
-            RetrofitInstance.api.searchMostPopularVideos(
-                chart = "mostPopular",
-                maxResults = 25,
-            )
+        return fetchMostVideo{
+            RetrofitInstance.api.MostPopularVideos()
         }
     }
 
@@ -79,12 +84,14 @@ class ItemRepository {
                 val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
                 val date = stringToDate(dateString, dateFormat) ?: Date()
 
+                val title = items.snippet?.title?.replace("&#39;", "'")?.replace("&quot;", "\"")
+
                 // media type 확인
                 when (items.id?.kind ?: "none type") {
                     "youtube#video" -> {
                         val item = VideoItem(
                             id = items.id?.videoId ?: "",
-                            title = items.snippet?.title ?: "none-title",
+                            title = title ?: "none-title",
                             description = items.snippet?.description ?: "",
                             datetime = date,
                             thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
@@ -150,9 +157,11 @@ class ItemRepository {
                 val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
                 val date = stringToDate(dateString, dateFormat) ?: Date()
 
+                val title = items.snippet?.title?.replace("&#39;", "'")?.replace("&quot;", "\"")
+
                 val item = VideoItem(
                     id = items.id ?: "",
-                    title = items.snippet?.title ?: "none-title",
+                    title = title ?: "none-title",
                     description = items.snippet?.description ?: "",
                     datetime = date,
                     thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
@@ -164,6 +173,7 @@ class ItemRepository {
 
             return Response.success(mediaItemList)
         } else {
+
             return Response.error(response.code(), response.errorBody())
         }
     }
@@ -180,14 +190,17 @@ class ItemRepository {
             categoryResponse?.items?.forEach { items ->
                 if (items.snippet?.assignable == false) return@forEach
 
+                val title = items.snippet?.title?.replace("&#39;", "'")?.replace("&quot;", "\"")
+
                 val category = Category(
                     id = items.id ?: "0",
-                    title = items.snippet?.title ?: "none-title",
+                    title = title ?: "none-title",
                 )
                 categoryList.add(category)
             }
             return Response.success(categoryList)
         } else {
+
             return Response.error(response.code(), response.errorBody())
         }
     }
@@ -207,9 +220,11 @@ class ItemRepository {
                 val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
                 val date = stringToDate(dateString, dateFormat) ?: Date()
 
+                val title = items.snippet?.title?.replace("&#39;", "'")?.replace("&quot;", "\"")
+
                 item = ChannelItem(
                     id = items.id ?: "",
-                    title = items.snippet?.title ?: "none-title",
+                    title = title ?: "none-title",
                     description = items.snippet?.description ?: "",
                     datetime = date,
                     thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
@@ -219,6 +234,44 @@ class ItemRepository {
 
             return Response.success(item)
         } else {
+
+            return Response.error(response.code(), response.errorBody())
+        }
+    }
+
+    private inline fun fetchMostVideo(
+        fetchFunction: () -> Response<ApiResponse<NoneSearchItem>>
+    ): Response<MutableList<MediaItem>> {
+        val response = fetchFunction()
+
+        if (response.isSuccessful) {
+            val videoResponse = response.body()
+            val mediaItemList = mutableListOf<MediaItem>()
+
+            videoResponse?.items?.forEach { items ->
+                // 날짜 변환
+                val dateString = items.snippet?.publishedAt ?: ""
+                val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                val date = stringToDate(dateString, dateFormat) ?: Date()
+
+                val title = items.snippet?.title?.replace("&#39;", "'")?.replace("&quot;", "\"")
+
+                val item = VideoItem(
+                    id = items.id ?: "",
+                    title = title ?: "none-title",
+                    description = items.snippet?.description ?: "",
+                    datetime = date,
+                    thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
+                    isFavorite = false,
+                    channelId = items.snippet?.channelId ?: "",
+                )
+
+                mediaItemList.add(item)
+            }
+
+            return Response.success(mediaItemList)
+        } else {
+
             return Response.error(response.code(), response.errorBody())
         }
     }

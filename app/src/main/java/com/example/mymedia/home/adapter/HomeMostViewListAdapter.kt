@@ -27,16 +27,16 @@ class HomeMostViewListAdapter :
             }
         }) {
 
-    // 롱클릭 리스너 인터페이스 정의
-    interface OnItemLongClickListener {
-        fun onItemLongClick(videoItem: VideoItem)
+    // 클릭 리스너 인터페이스 정의
+    interface OnItemClickListener {
+        fun onItemClick(videoItem: VideoItem)
     }
 
-    private var onItemLongClickListener: OnItemLongClickListener? = null
+    private var onItemClickListener: OnItemClickListener? = null
 
     // 롱클릭 리스너 설정 메서드
-    fun setOnItemLongClickListener(listener: OnItemLongClickListener) {
-        this.onItemLongClickListener = listener
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.onItemClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -62,8 +62,8 @@ class HomeMostViewListAdapter :
                     .into(posterImageView)
                 posterImageView.clipToOutline = true
 
-                itemView.setOnLongClickListener {
-                    onItemLongClickListener?.onItemLongClick(videoItem)
+                itemView.setOnClickListener {
+                    onItemClickListener?.onItemClick(videoItem)
                     true
                 }
             }
