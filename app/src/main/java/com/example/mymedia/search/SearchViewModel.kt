@@ -23,7 +23,7 @@ class SearchViewModel(
     private val repository: ItemRepository,
 ) : ViewModel() {
 
-    private val apiSavingMode = Data.apiSavingMode
+    private val apiSavingMode = false
 
     private val _searchvideo = MutableLiveData<MutableList<VideoItem>>()
     val searchvideo: LiveData<MutableList<VideoItem>>
