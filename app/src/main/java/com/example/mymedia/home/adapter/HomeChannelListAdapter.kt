@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mymedia.data.ChannelItem
-import com.example.mymedia.data.VideoItem
-import com.example.mymedia.databinding.ChannelItemBinding
+import com.example.mymedia.databinding.RvHomeChannelItemBinding
 
 class HomeChannelListAdapter :
     ListAdapter<ChannelItem, HomeChannelListAdapter.ViewHolder>(
@@ -42,7 +41,7 @@ class HomeChannelListAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ChannelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RvHomeChannelItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -52,7 +51,7 @@ class HomeChannelListAdapter :
     }
 
     inner class ViewHolder(
-        private val binding: ChannelItemBinding,
+        private val binding: RvHomeChannelItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(channelItem: ChannelItem) {

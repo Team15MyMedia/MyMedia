@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mymedia.databinding.RvHomeVideoItemBinding
-import com.example.mymedia.home.getHighQualityThumbnailUrl
+import com.example.mymedia.databinding.RvHomeBannerItemBinding
 
-class HomeCategoryVideoListAdapter :
-    ListAdapter<VideoItem, HomeCategoryVideoListAdapter.ViewHolder>(
+class HomeBannerListAdapter :
+    ListAdapter<VideoItem, HomeBannerListAdapter.ViewHolder>(
         object : DiffUtil.ItemCallback<VideoItem>() {
             override fun areItemsTheSame(
                 oldVideoItem: VideoItem,
@@ -29,20 +28,20 @@ class HomeCategoryVideoListAdapter :
         }) {
 
     // 롱클릭 리스너 인터페이스 정의
-    interface OnItemClickListener {
-        fun onItemClick(videoItem: VideoItem)
+    interface OnItemLongClickListener {
+        fun onItemLongClick(videoItem: VideoItem)
     }
 
-    private var onItemClickListener: OnItemClickListener? = null
+    private var onItemLongClickListener: OnItemLongClickListener? = null
 
     // 롱클릭 리스너 설정 메서드
-    fun setOnItemClickListener(listener: OnItemClickListener) {
-        this.onItemClickListener = listener
+    fun setOnItemLongClickListener(listener: OnItemLongClickListener) {
+        this.onItemLongClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RvHomeVideoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RvHomeBannerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -52,19 +51,17 @@ class HomeCategoryVideoListAdapter :
     }
 
     inner class ViewHolder(
-        private val binding: RvHomeVideoItemBinding,
+        private val binding: RvHomeBannerItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(videoItem: VideoItem) {
             with(binding) {
-                val highQualityThumbnailUrl = getHighQualityThumbnailUrl(videoItem.thumbnail)
                 Glide.with(itemView.context)
-                    .load(highQualityThumbnailUrl)
-                    .into(posterImageView)
-                posterImageView.clipToOutline = true
+                    .load(videoItem.thumbnail.replace("default_live.jpg", "hqdefault_live.jpg"))
+                    .into(bannerImg)
 
-                itemView.setOnClickListener {
-                    onItemClickListener?.onItemClick(videoItem)
+                itemView.setOnLongClickListener {
+                    onItemLongClickListener?.onItemLongClick(videoItem)
                     true
                 }
             }

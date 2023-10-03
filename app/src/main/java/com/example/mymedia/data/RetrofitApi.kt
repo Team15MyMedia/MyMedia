@@ -16,15 +16,24 @@ interface RetrofitApi {
         @Query("maxResults") maxResults: Int = 25,
     ): Response<ApiResponse<SearchItem>>
 
-    @GET("search")
-    suspend fun searchMostPopularVideos(
+//    @GET("search")
+//    suspend fun searchMostPopularVideos(
+//        @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
+//        @Query("chart") chart: String = "mostPopular",
+//        @Query("type") type: String = "video",
+//        @Query("part") part: String = "snippet",
+//        @Query("regionCode") regionCode: String = "KR",
+//        @Query("maxResults") maxResults: Int = 25,
+//    ): Response<ApiResponse<SearchItem>>
+
+    @GET("videos")
+    suspend fun MostPopularVideos(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
+        @Query("part") part: String = "snippet,contentDetails",
         @Query("chart") chart: String = "mostPopular",
-        @Query("type") type: String = "video",
-        @Query("part") part: String = "snippet",
         @Query("regionCode") regionCode: String = "KR",
-        @Query("maxResults") maxResults: Int = 25,
-    ): Response<ApiResponse<SearchItem>>
+        @Query("maxResults") maxResults: Int = 50,
+    ): Response<ApiResponse<NoneSearchItem>>
 
     @GET("search")
     suspend fun searchChannel(
@@ -35,6 +44,17 @@ interface RetrofitApi {
         @Query("part") part: String = "snippet",
         @Query("regionCode") regionCode: String = "KR",
         @Query("maxResults") maxResults: Int = 25,
+    ): Response<ApiResponse<SearchItem>>
+
+    @GET("search")
+    suspend fun searchMostPopularLiveVideos(
+        @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
+        @Query("chart") chart: String = "mostPopular",
+        @Query("type") type: String = "video",
+        @Query("part") part: String = "snippet",
+        @Query("relevanceLanguage") relevanceLanguage: String = "ko",
+        @Query("eventType") eventType: String = "live",
+        @Query("maxResults") maxResults: Int = 5,
     ): Response<ApiResponse<SearchItem>>
 
     @GET("videos")

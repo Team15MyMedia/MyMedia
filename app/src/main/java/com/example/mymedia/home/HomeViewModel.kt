@@ -2,7 +2,9 @@ package com.example.mymedia.home
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,7 +23,7 @@ class HomeViewModel(
     private val repository: ItemRepository,
 ) : ViewModel() {
 
-    private val apiSavingMode = Data.apiSavingMode
+    private val apiSavingMode = true
 
     private val _categoryVideo = MutableLiveData<MutableList<VideoItem>>()
     val categoryVideo: LiveData<MutableList<VideoItem>>
@@ -40,6 +42,11 @@ class HomeViewModel(
         get() = _categoryList
 
     private val _curCategory = MutableLiveData<Int>()
+
+    private val _mostLive = MutableLiveData<MutableList<VideoItem>>()
+    val mostLive: LiveData<MutableList<VideoItem>>
+        get() = _mostLive
+
     val curCategory: LiveData<Int>
         get() = _curCategory
 
@@ -48,10 +55,14 @@ class HomeViewModel(
         _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
         _curCategory.value = 0
 
+        _mostLive.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
+
         if (!apiSavingMode) {
             getCategoryList()
             searchMostVideo()
+
         }
+        searchMostLiveVideo()
     }
 
     fun showDetail(videoItem: VideoItem, context: Context) {
@@ -59,6 +70,13 @@ class HomeViewModel(
         intent.putExtra("videoThumbnail", videoItem.thumbnail)
         intent.putExtra("videoTitle", videoItem.title)
         intent.putExtra("videoDescription", videoItem.description)
+        context.startActivity(intent)
+    }
+
+    fun showByYoutube(videoItem: VideoItem, context: Context) {
+        val videoUrl = "https://www.youtube.com/watch?v=${videoItem.id}"
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
+        intent.setPackage("com.google.android.youtube")
         context.startActivity(intent)
     }
 
@@ -78,6 +96,26 @@ class HomeViewModel(
                 _most.value = list.filterIsInstance<VideoItem>().toMutableList()
             }
         }
+    }
+
+    private fun searchMostLiveVideo() {
+//        if (!apiSavingMode) {
+        viewModelScope.launch {
+            val list = mutableListOf<MediaItem>()
+            // Video
+            val responseVideo = repository.findMostLiveVideo()
+            if (responseVideo.isSuccessful) {
+                val itemList = responseVideo.body() ?: mutableListOf()
+                list.addAll(itemList)
+            } else {
+                // null일 시 공백 리스트 생성
+                _mostLive.value = mutableListOf()
+            }
+            _mostLive.value = list.filterIsInstance<VideoItem>().toMutableList()
+            Log.d("init", "${_mostLive.value}")
+        }
+
+//        }
     }
 
     fun searchByCategory(id: String) {

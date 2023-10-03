@@ -8,10 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.RvSearchItemBinding
-import com.example.mymedia.databinding.VideoItemBinding
-import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
-import com.example.mymedia.home.getHighQualityThumbnailUrl
-
 
 class SearchRVAdapter : ListAdapter<VideoItem, SearchRVAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<VideoItem>(){
@@ -27,16 +23,14 @@ class SearchRVAdapter : ListAdapter<VideoItem, SearchRVAdapter.ViewHolder>(
     }
 ) {
 
-    // 롱클릭 리스너 인터페이스 정의
-    interface OnItemLongClickListener {
-        fun onItemLongClick(videoItem: VideoItem)
+    interface OnItemClickListener {
+        fun onItemClick(videoItem: VideoItem)
     }
 
-    private var onItemLongClickListener: OnItemLongClickListener? = null
+    private var onItemClickListener: OnItemClickListener? = null
 
-    // 롱클릭 리스너 설정 메서드
-    fun setOnItemLongClickListener(listener: OnItemLongClickListener) {
-        this.onItemLongClickListener = listener
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.onItemClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -63,8 +57,8 @@ class SearchRVAdapter : ListAdapter<VideoItem, SearchRVAdapter.ViewHolder>(
 
             tvTitle.text = videoItem.title
 
-            itemView.setOnLongClickListener {
-                onItemLongClickListener?.onItemLongClick(videoItem)
+            itemView.setOnClickListener {
+                onItemClickListener?.onItemClick(videoItem)
                 true
             }
         }

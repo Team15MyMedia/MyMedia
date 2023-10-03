@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mymedia.R
-import com.example.mymedia.databinding.VideoItemBinding
+import com.example.mymedia.databinding.RvHomeVideoItemBinding
 
 class HomeMostViewListAdapter :
     ListAdapter<VideoItem, HomeMostViewListAdapter.ViewHolder>(
@@ -28,21 +27,21 @@ class HomeMostViewListAdapter :
             }
         }) {
 
-    // 롱클릭 리스너 인터페이스 정의
-    interface OnItemLongClickListener {
-        fun onItemLongClick(videoItem: VideoItem)
+    // 클릭 리스너 인터페이스 정의
+    interface OnItemClickListener {
+        fun onItemClick(videoItem: VideoItem)
     }
 
-    private var onItemLongClickListener: OnItemLongClickListener? = null
+    private var onItemClickListener: OnItemClickListener? = null
 
     // 롱클릭 리스너 설정 메서드
-    fun setOnItemLongClickListener(listener: OnItemLongClickListener) {
-        this.onItemLongClickListener = listener
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.onItemClickListener = listener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            VideoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RvHomeVideoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -52,7 +51,7 @@ class HomeMostViewListAdapter :
     }
 
     inner class ViewHolder(
-        private val binding: VideoItemBinding,
+        private val binding: RvHomeVideoItemBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(videoItem: VideoItem) {
@@ -63,8 +62,8 @@ class HomeMostViewListAdapter :
                     .into(posterImageView)
                 posterImageView.clipToOutline = true
 
-                itemView.setOnLongClickListener {
-                    onItemLongClickListener?.onItemLongClick(videoItem)
+                itemView.setOnClickListener {
+                    onItemClickListener?.onItemClick(videoItem)
                     true
                 }
             }
