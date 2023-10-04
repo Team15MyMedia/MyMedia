@@ -6,25 +6,17 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RetrofitApi {
+
     @GET("search")
     suspend fun searchVideos(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
         @Query("q") query: String,
+        @Query("pageToken") pageToken: String,
         @Query("type") type: String = "video",
         @Query("part") part: String = "snippet",
         @Query("regionCode") regionCode: String = "KR",
-        @Query("maxResults") maxResults: Int = 25,
+        @Query("maxResults") maxResults: Int = 8,
     ): Response<ApiResponse<SearchItem>>
-
-//    @GET("search")
-//    suspend fun searchMostPopularVideos(
-//        @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
-//        @Query("chart") chart: String = "mostPopular",
-//        @Query("type") type: String = "video",
-//        @Query("part") part: String = "snippet",
-//        @Query("regionCode") regionCode: String = "KR",
-//        @Query("maxResults") maxResults: Int = 25,
-//    ): Response<ApiResponse<SearchItem>>
 
     @GET("videos")
     suspend fun MostPopularVideos(
@@ -39,11 +31,11 @@ interface RetrofitApi {
     suspend fun searchChannel(
         @Query("key") key: String = BuildConfig.YOUTUBE_API_KEY,
         @Query("q") query: String,
-        @Query("order") chart: String = "viewCount",
+        @Query("pageToken") pageToken: String,
         @Query("type") type: String = "channel",
         @Query("part") part: String = "snippet",
         @Query("regionCode") regionCode: String = "KR",
-        @Query("maxResults") maxResults: Int = 25,
+        @Query("maxResults") maxResults: Int = 8,
     ): Response<ApiResponse<SearchItem>>
 
     @GET("search")

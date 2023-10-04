@@ -1,19 +1,16 @@
 package com.example.mymedia.search
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentSearchResultBinding
-import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 
 class SearchFragmentResult() : Fragment() {
 
@@ -39,6 +36,16 @@ class SearchFragmentResult() : Fragment() {
         )[SearchViewModel::class.java]
     }
 
+    private lateinit var gridmanager: StaggeredGridLayoutManager
+    private lateinit var channelGridmanager: StaggeredGridLayoutManager
+    private var visibleItemCount = 0
+    private var totalItemCount = 0
+    private var pastVisibleItems = 0
+    private var channelVisibleItemCount = 0
+    private var channelTotalItemCount = 0
+    private var channelPastVisibleItems = 0
+    private var loading = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,14 +66,18 @@ class SearchFragmentResult() : Fragment() {
 
         //channel recyclerview
         rvChannel.adapter = channelListAdapter
-        val layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        rvChannel.layoutManager = layoutManager
+        channelGridmanager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.HORIZONTAL)
+        rvChannel.layoutManager = channelGridmanager
+        rvChannel.addOnScrollListener(onScrollChannelListener)
+        rvChannel.itemAnimator = null
 
 
         //videos recyclerview
         rvVideos.adapter = videosListAdapter
-        rvVideos.layoutManager = GridLayoutManager(requireContext(), 3)
+        gridmanager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+        rvVideos.layoutManager = gridmanager
+        rvVideos.addOnScrollListener(onScrollListener)
+        rvVideos.itemAnimator = null
 
         videosListAdapter.setOnItemClickListener(object : SearchResultVideoRVAdapter.OnItemClickListener{
             override fun onItemClick(videoItem: VideoItem) {
@@ -83,7 +94,46 @@ class SearchFragmentResult() : Fragment() {
         searchViewModel.searchChannel.observe(viewLifecycleOwner) { itemList ->
             channelListAdapter.submitList(itemList.toMutableList())
         }
+        searchViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            loading = !isLoading
+        }
     }
+
+    private var onScrollListener: RecyclerView.OnScrollListener =
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                visibleItemCount = gridmanager.childCount
+                totalItemCount = gridmanager.itemCount
+
+                val firstVisibleItems = gridmanager.findFirstVisibleItemPositions(null)
+                if (firstVisibleItems.isNotEmpty()) {
+                    pastVisibleItems = firstVisibleItems[0]
+                }
+
+                if (loading && visibleItemCount + pastVisibleItems >= totalItemCount) {
+                    loading = false
+                    searchViewModel.doSearch(searchViewModel.searchText)
+                }
+            }
+        }
+
+    private var onScrollChannelListener: RecyclerView.OnScrollListener =
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                channelVisibleItemCount = channelGridmanager.childCount
+                channelTotalItemCount = channelGridmanager.itemCount
+
+                val firstVisibleItems = channelGridmanager.findFirstVisibleItemPositions(null)
+                if (firstVisibleItems.isNotEmpty()) {
+                    channelPastVisibleItems = firstVisibleItems[0]
+                }
+
+                if (loading && channelVisibleItemCount + channelPastVisibleItems >= channelTotalItemCount) {
+                    loading = false
+                    searchViewModel.doChannelSearch(searchViewModel.searchText)
+                }
+            }
+        }
 
     override fun onDestroyView() {
         _binding = null
