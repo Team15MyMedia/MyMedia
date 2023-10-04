@@ -1,6 +1,7 @@
 package com.example.mymedia.home
 
 import android.R
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -21,10 +22,12 @@ import com.example.mymedia.data.Category
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
+import com.example.mymedia.detail.DetailActivity
 import com.example.mymedia.home.adapter.HomeBannerListAdapter
 import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
 import com.example.mymedia.home.adapter.HomeMostViewListAdapter
+import com.example.mymedia.main.MainSharedViewModel
 
 
 class HomeFragment : Fragment() {
@@ -52,6 +55,10 @@ class HomeFragment : Fragment() {
         HomeBannerListAdapter()
     }
 
+    private val mainSharedViewModel by lazy {
+        ViewModelProvider(requireActivity())[MainSharedViewModel::class.java]
+    }
+
     private val homeViewModel by lazy {
         ViewModelProvider(
             this, SearchViewModelFactory(ItemRepository())
@@ -71,7 +78,6 @@ class HomeFragment : Fragment() {
 
     // test 두 번째 값만 추출한 배열
     private val spinnerItems: Array<String> = categories.map { it.title }.toTypedArray()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -181,29 +187,31 @@ class HomeFragment : Fragment() {
             homeViewModel.categoryList.value?.map { it.title }?.toTypedArray() ?: spinnerItems
         )
 
-        // 롱클릭 시
-        categoryVideoListAdapter.setOnItemClickListener(object :
-            HomeCategoryVideoListAdapter.OnItemClickListener {
-            override fun onItemClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
-                homeViewModel.showDetail(videoItem, requireContext())
-            }
-        })
-
-        mostListAdapter.setOnItemClickListener(object :
-            HomeMostViewListAdapter.OnItemClickListener {
-            override fun onItemClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
-                homeViewModel.showDetail(videoItem, requireContext())
-            }
-        })
-
-        // test
+        // 배너 롱클릭 시
         bannerListAdapter.setOnItemLongClickListener(object :
             HomeBannerListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
                 homeViewModel.showByYoutube(videoItem, requireContext())
+            }
+        })
+
+        // 가장 많이본 동영상 클릭 시
+        mostListAdapter.setOnItemClickListener(object :
+            HomeMostViewListAdapter.OnItemClickListener {
+            override fun onItemClick(videoItem: VideoItem) {
+                if (mainSharedViewModel.getIsFavorite(videoItem)) {
+                    showDetail(videoItem.copy(isFavorite = true))
+                } else {
+                    showDetail(videoItem)
+                }
+            }
+        })
+
+        // 카테고리 동영상 클릭 시
+        categoryVideoListAdapter.setOnItemClickListener(object :
+            HomeCategoryVideoListAdapter.OnItemClickListener {
+            override fun onItemClick(videoItem: VideoItem) {
+                showDetail(videoItem)
             }
         })
     }
@@ -220,6 +228,7 @@ class HomeFragment : Fragment() {
         }
         homeViewModel.most.observe(viewLifecycleOwner) { itemList ->
             mostListAdapter.submitList(itemList.toMutableList())
+            Log.d("check", itemList[0].toString())
         }
         homeViewModel.categoryList.observe(viewLifecycleOwner) { itemList ->
             setSpinner(itemList.map { it.title }.toTypedArray())
@@ -277,6 +286,20 @@ class HomeFragment : Fragment() {
 
         // 초기 선택값 설정
         spinner.setSelection(homeViewModel.curCategory.value ?: 0)
+    }
+
+    fun showDetail(videoItem: VideoItem) {
+        val intent = Intent(context, DetailActivity::class.java)
+
+        intent.putExtra(
+            "videoThumbnail",
+            videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg")
+        )
+        intent.putExtra("videoTitle", videoItem.title)
+        intent.putExtra("videoDescription", videoItem.description)
+        intent.putExtra("isFavorite", videoItem.isFavorite)
+
+        startActivity(intent)
     }
 
     override fun onDestroyView() {
