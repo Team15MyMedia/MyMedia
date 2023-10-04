@@ -31,14 +31,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
         android:id="@+id/thumbnailImageView"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_marginTop="32dp"
-        android:scaleType="fitXY"
-        app:layout_constraintTop_toBottomOf="@id/textView"
-        app:srcCompat="@drawable/_2023_09_25_171503" />
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
 
     <ImageButton
         android:id="@+id/imageButton3"
