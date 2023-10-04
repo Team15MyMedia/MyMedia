@@ -65,14 +65,6 @@ class HomeViewModel(
         searchMostLiveVideo()
     }
 
-    fun showDetail(videoItem: VideoItem, context: Context) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra("videoThumbnail", videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg"))
-        intent.putExtra("videoTitle", videoItem.title)
-        intent.putExtra("videoDescription", videoItem.description)
-        context.startActivity(intent)
-    }
-
     fun showByYoutube(videoItem: VideoItem, context: Context) {
         val videoUrl = "https://www.youtube.com/watch?v=${videoItem.id}"
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
@@ -114,7 +106,6 @@ class HomeViewModel(
             _mostLive.value = list.filterIsInstance<VideoItem>().toMutableList()
             Log.d("init", "${_mostLive.value}")
         }
-
 //        }
     }
 
