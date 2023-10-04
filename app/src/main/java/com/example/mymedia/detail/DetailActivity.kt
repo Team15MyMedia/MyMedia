@@ -35,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
         val imageUrl = intent.getStringExtra("videoThumbnail")
         val title = intent.getStringExtra("videoTitle")
         val description = intent.getStringExtra("videoDescription")
+        val isFavorite = intent.getBooleanExtra("isFavorite", false)
 
         titleTextView.text = title
         descriptionTextView.text = description

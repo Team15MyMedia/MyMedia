@@ -3,6 +3,7 @@ package com.example.mymedia.main
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.example.mymedia.R
 import com.example.mymedia.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
@@ -12,6 +13,8 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val viewPager by lazy { binding.viewPager }
     private val tabLayout by lazy { binding.tabLayout }
+
+
 
     companion object {
         private var context: Context? = null
@@ -35,12 +38,10 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = adapter
         viewPager.offscreenPageLimit = adapter.itemCount
 
-
         // 뷰페이저 스와이프 막기
         viewPager.run {
             isUserInputEnabled = false
         }
-
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
@@ -69,9 +70,7 @@ class MainActivity : AppCompatActivity() {
                 updateTabIconsAndText(tab, false)
             }
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
 
@@ -84,16 +83,16 @@ class MainActivity : AppCompatActivity() {
                 tab.setIcon(if (isSelected) R.drawable.ic_sel_home_bt else R.drawable.ic_unsel_home_bt)
                 tab.text = if (isSelected) "홈" else "홈"
             }
+
             1 -> {
                 tab.setIcon(if (isSelected) R.drawable.ic_unsel_search_bt2 else R.drawable.ic_unsel_search_bt)
                 tab.text = if (isSelected) "검색" else "검색"
             }
+
             2 -> {
                 tab.setIcon(if (isSelected) R.drawable.ic_sel_mypage_bt else R.drawable.ic_unsel_mypage_bt)
                 tab.text = if (isSelected) "마이 페이지" else "마이 페이지"
             }
         }
     }
-
-
 }
