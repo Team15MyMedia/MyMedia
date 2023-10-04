@@ -95,7 +95,10 @@ class SearchViewModel(
                     list.addAll(emptyList)
                 }
                 isVideoSearchFinished = true
-                checkSearchCompletion()
+                if (isVideoSearchFinished) {
+                    _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
+                    _isLoading.value = false
+                }
             }
         }
     }
@@ -124,7 +127,10 @@ class SearchViewModel(
                     channelList.addAll(emptyList)
                 }
                 isChannelSearchFinished = true
-                checkSearchChannelCompletion()
+                if (isChannelSearchFinished) {
+                    _searchChannel.value = channelList.filterIsInstance<ChannelItem>().toMutableList()
+                    _isLoading.value = false
+                }
             }
         }
     }
@@ -141,37 +147,17 @@ class SearchViewModel(
     fun doSearch(text: String) {
 
         _isLoading.value = true
-
         isVideoSearchFinished = false
-        isChannelSearchFinished = false
 
-        Log.d("curPage", curPageCnt)
         searchVideo(text, curPageCnt)
     }
 
     fun doChannelSearch(text: String) {
 
         _isLoading.value = true
-
         isChannelSearchFinished = false
 
-        Log.d("curPage", curPageCnt)
         searchChannel(text, curPageCnt)
-    }
-
-    private fun checkSearchCompletion() {
-        if (isVideoSearchFinished) {
-            Log.d("searchvideo", list.filterIsInstance<VideoItem>().toMutableList().toString())
-            _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
-            _isLoading.value = false
-        }
-    }
-
-    private fun checkSearchChannelCompletion() {
-        if (isChannelSearchFinished) {
-            _searchChannel.value = channelList.filterIsInstance<ChannelItem>().toMutableList()
-            _isLoading.value = false
-        }
     }
 
 }
