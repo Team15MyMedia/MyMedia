@@ -1,37 +1,57 @@
 package com.example.mymedia.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mymedia.data.VideoItem
-import java.util.Date
 
 class MainSharedViewModel() : ViewModel() {
 
-    private val _favoriteList = MutableLiveData<MutableList<VideoItem>>()
-    val favoriteList: LiveData<MutableList<VideoItem>>
-        get() = _favoriteList
+    private val _myPageEvent = MutableLiveData<MainEventForMyPage>()
+    val myPageEvent: LiveData<MainEventForMyPage>
+        get() = _myPageEvent
 
-    init {
-//        sharedPreference에서 가져오기...
-        _favoriteList.value = mutableListOf(
-            VideoItem(
-                id = "HLnTVgdP_g0",
-                title = "이집트 홍해 한달살기가 최고인 이유 【이집트4】",
-                description = "이유는 저도 모름ㅋ",
-                datetime = Date(), // 임의의 날짜 값
-                thumbnail = "https://example.com/thumbnail.jpg", // 임의의 이미지 URL
-                isFavorite = true,
-                nextPage = "https://example.com/nextpage", // 임의의 다음 페이지 URL
-                channelId = "UC1234567890" // 임의의 채널 ID
-            )
-        )
+    private val _detailEvent = MutableLiveData<MainEventForDetail>()
+    val detailEvent: LiveData<MainEventForDetail>
+        get() = _detailEvent
+
+    var selItem: VideoItem? = null
+
+    // myPage에 event 전달
+    fun isFavorite(videoItem: VideoItem) {
+        _myPageEvent.value = MainEventForMyPage.CheckMyPageItem(videoItem)
     }
 
-    fun getIsFavorite(videoItem: VideoItem): Boolean {
-        val curList = _favoriteList.value ?: return false
-        Log.d("favorite", curList.toString())
-        return curList.find { it.id == videoItem.id } != null
+    // mypage에서 온 이벤트
+    fun checkVideo(item: VideoItem?) {
+        selItem = item
     }
+
+    fun updateData(item: VideoItem) {
+        _myPageEvent.value = MainEventForMyPage.UpdateMyPageItem(item)
+    }
+}
+
+sealed interface MainEventForMyPage {
+    data class AddMyPageItem(
+        val item: VideoItem
+    ) : MainEventForMyPage
+
+    data class RemoveMyPageItem(
+        val item: VideoItem
+    ) : MainEventForMyPage
+
+    data class UpdateMyPageItem(
+        val item: VideoItem
+    ) : MainEventForMyPage
+
+    data class CheckMyPageItem(
+        val item: VideoItem
+    ) : MainEventForMyPage
+}
+
+sealed interface MainEventForDetail {
+    data class CheckDetailItem(
+        val items: MutableList<VideoItem>
+    ) : MainEventForMyPage
 }
