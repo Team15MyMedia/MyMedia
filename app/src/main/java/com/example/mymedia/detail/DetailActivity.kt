@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.mymedia.R
 import com.bumptech.glide.Glide
-import com.example.mymedia.home.getHighQualityThumbnailUrl
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +34,7 @@ class DetailActivity : AppCompatActivity() {
         descriptionTextView.text = description
 
         Glide.with(this)
-            .load(getHighQualityThumbnailUrl(imageUrl))
+            .load(imageUrl)
             .into(thumbnailImageView)
 
         val shareButton: ImageView = findViewById(R.id.imageButton4)
@@ -53,7 +52,7 @@ class DetailActivity : AppCompatActivity() {
         startActivity(shareIntent)
     }
     private fun extractVideoIdFromThumbnailUrl(thumbnailUrl: String?): String {
-        val pattern = "https://i.ytimg.com/vi/(.*?)/default.jpg".toRegex()
+        val pattern = "https://i.ytimg.com/vi/(.*?)/maxresdefault.jpg".toRegex()
         val matchResult = pattern.find(thumbnailUrl ?: "")
         return matchResult?.groupValues?.get(1) ?: ""
     }

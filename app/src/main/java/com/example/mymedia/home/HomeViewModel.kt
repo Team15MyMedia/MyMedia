@@ -23,7 +23,7 @@ class HomeViewModel(
     private val repository: ItemRepository,
 ) : ViewModel() {
 
-    private val apiSavingMode = true
+    private val apiSavingMode = false
 
     private val _categoryVideo = MutableLiveData<MutableList<VideoItem>>()
     val categoryVideo: LiveData<MutableList<VideoItem>>
@@ -67,7 +67,7 @@ class HomeViewModel(
 
     fun showDetail(videoItem: VideoItem, context: Context) {
         val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra("videoThumbnail", videoItem.thumbnail)
+        intent.putExtra("videoThumbnail", videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg"))
         intent.putExtra("videoTitle", videoItem.title)
         intent.putExtra("videoDescription", videoItem.description)
         context.startActivity(intent)
