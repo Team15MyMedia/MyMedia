@@ -82,7 +82,7 @@ class SearchViewModel(
                     if (itemList.isNullOrEmpty()) {
                         Toast.makeText(
                             MainActivity.getContext(),
-                            "비디오 검색 결과가 없습니다!",
+                            "비디오 검색 결과가 없습니다!!",
                             Toast.LENGTH_SHORT
                         ).show()
                         itemList = mutableListOf()
