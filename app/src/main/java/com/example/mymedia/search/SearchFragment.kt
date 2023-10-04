@@ -8,7 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mymedia.R
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.databinding.FragmentSearchBinding
@@ -37,7 +40,6 @@ class SearchFragment : Fragment() {
         )[SearchViewModel::class.java]
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,8 +60,11 @@ class SearchFragment : Fragment() {
 
         imbSearch.setOnClickListener {
 
-            searchViewModel.searchVideo(edtSearch.text.toString())
-            searchViewModel.searchChannel(edtSearch.text.toString())
+            searchViewModel.list.clear()
+            searchViewModel.searchText = edtSearch.text.toString()
+
+            searchViewModel.searchVideo(searchViewModel.searchText, "")
+            searchViewModel.searchChannel(searchViewModel.searchText, "")
 
             val fragmentResult = searchResultFragment
             val transaction = requireFragmentManager().beginTransaction()
@@ -74,6 +79,8 @@ class SearchFragment : Fragment() {
 
     private fun initModel() = with(binding) {
     }
+
+
 
     override fun onDestroyView() {
         _binding = null

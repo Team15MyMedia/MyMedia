@@ -9,6 +9,7 @@ sealed class MediaItem {
     abstract val datetime: Date
     abstract val thumbnail: String
     abstract var isFavorite: Boolean
+    abstract val nextPage: String
 }
 
 data class VideoItem(
@@ -18,7 +19,8 @@ data class VideoItem(
     override val datetime: Date,
     override val thumbnail: String,
     override var isFavorite: Boolean,
-    val channelId: String
+    override val nextPage: String,
+    val channelId: String,
 ) : MediaItem()
 
 data class ChannelItem(
@@ -27,7 +29,8 @@ data class ChannelItem(
     override val description: String,
     override val datetime: Date,
     override val thumbnail: String,
-    override var isFavorite: Boolean
+    override var isFavorite: Boolean,
+    override val nextPage: String
 ) : MediaItem()
 
 data class Category(

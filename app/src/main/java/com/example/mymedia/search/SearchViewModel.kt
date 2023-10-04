@@ -37,12 +37,23 @@ class SearchViewModel(
     val searchChannel: LiveData<MutableList<ChannelItem>>
         get() = _searchChannel
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    val list = mutableListOf<MediaItem>()
+    val channelList = mutableListOf<MediaItem>()
+
+    var curPageCnt: String = ""
+    var searchText: String = ""
+    var isVideoSearchFinished = false
+    var isChannelSearchFinished = false
+
     init {
         _most.value = Data.getSearchData()
     }
 
     fun searchMostVideo() {
-        if (!apiSavingMode) {
+        if (true) {
             viewModelScope.launch {
                 val list = mutableListOf<MediaItem>()
                 // Video
@@ -59,12 +70,12 @@ class SearchViewModel(
         }
     }
 
-    fun searchVideo(text: String) {
+    fun searchVideo(text: String, page:String) {
         if (!apiSavingMode) {
             viewModelScope.launch {
-                val list = mutableListOf<MediaItem>()
+
                 // Video
-                val responseVideo = repository.searchVideo(text)
+                val responseVideo = repository.searchVideo(text, page)
                 if (responseVideo.isSuccessful) {
                     var itemList = responseVideo.body() ?: mutableListOf()
 
@@ -76,22 +87,25 @@ class SearchViewModel(
                         ).show()
                         itemList = mutableListOf()
                     }
+                    curPageCnt = itemList[itemList.size -1].nextPage
                     list.addAll(itemList)
                 } else {
                     // null일 시 공백 리스트 생성
-                    _searchvideo.value = mutableListOf()
+                    val emptyList: MutableList<MediaItem> = mutableListOf()
+                    list.addAll(emptyList)
                 }
-                _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
+                isVideoSearchFinished = true
+                checkSearchCompletion()
             }
         }
     }
 
-    fun searchChannel(text: String) {
+    fun searchChannel(text: String, page:String) {
         if (!apiSavingMode) {
             viewModelScope.launch {
-                val list = mutableListOf<MediaItem>()
+
                 // Channel
-                val responseVideo = repository.searchChannel(text)
+                val responseVideo = repository.searchChannel(text, page)
                 if (responseVideo.isSuccessful) {
                     var itemList = responseVideo.body()
 
@@ -103,15 +117,18 @@ class SearchViewModel(
                         ).show()
                         itemList = mutableListOf()
                     }
-
-                    list.addAll(itemList)
+                    curPageCnt = itemList[itemList.size -1].nextPage
+                    channelList.addAll(itemList)
                 } else {
-                    _searchChannel.value = mutableListOf()
+                    val emptyList: MutableList<MediaItem> = mutableListOf()
+                    channelList.addAll(emptyList)
                 }
-                _searchChannel.value = list.filterIsInstance<ChannelItem>().toMutableList()
+                isChannelSearchFinished = true
+                checkSearchChannelCompletion()
             }
         }
     }
+
 
     fun showDetail(videoItem: VideoItem, context: Context) {
         val intent = Intent(context, DetailActivity::class.java)
@@ -119,6 +136,42 @@ class SearchViewModel(
         intent.putExtra("videoTitle", videoItem.title)
         intent.putExtra("videoDescription", videoItem.description)
         context.startActivity(intent)
+    }
+
+    fun doSearch(text: String) {
+
+        _isLoading.value = true
+
+        isVideoSearchFinished = false
+        isChannelSearchFinished = false
+
+        Log.d("curPage", curPageCnt)
+        searchVideo(text, curPageCnt)
+    }
+
+    fun doChannelSearch(text: String) {
+
+        _isLoading.value = true
+
+        isChannelSearchFinished = false
+
+        Log.d("curPage", curPageCnt)
+        searchChannel(text, curPageCnt)
+    }
+
+    private fun checkSearchCompletion() {
+        if (isVideoSearchFinished) {
+            Log.d("searchvideo", list.filterIsInstance<VideoItem>().toMutableList().toString())
+            _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
+            _isLoading.value = false
+        }
+    }
+
+    private fun checkSearchChannelCompletion() {
+        if (isChannelSearchFinished) {
+            _searchChannel.value = channelList.filterIsInstance<ChannelItem>().toMutableList()
+            _isLoading.value = false
+        }
     }
 
 }

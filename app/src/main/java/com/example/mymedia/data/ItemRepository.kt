@@ -2,8 +2,11 @@ package com.example.mymedia.data
 
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.example.mymedia.main.MainActivity
 import com.example.mymedia.search.SearchFragment
+import com.example.mymedia.search.SearchViewModel
+import com.example.mymedia.search.SearchViewModelFactory2
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -27,14 +30,6 @@ class ItemRepository {
         }
     }
 
-//    suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
-//        return fetchItemList{
-//                RetrofitInstance.api.searchMostPopularVideos(
-//                    maxResults = 25,
-//                )
-//            }
-//    }
-
     suspend fun findMostVideo(): Response<MutableList<MediaItem>> {
         return fetchMostVideo{
             RetrofitInstance.api.MostPopularVideos()
@@ -53,17 +48,19 @@ class ItemRepository {
         }
     }
 
-    suspend fun searchVideo(text: String): Response<MutableList<MediaItem>> {
+    suspend fun searchVideo(text: String, page:String): Response<MutableList<MediaItem>> {
         return fetchItemList {
             RetrofitInstance.api.searchVideos(
+                pageToken = page,
                 query = text
             )
         }
     }
 
-    suspend fun searchChannel(text: String): Response<MutableList<MediaItem>> {
+    suspend fun searchChannel(text: String, page:String): Response<MutableList<MediaItem>> {
         return fetchItemList {
             RetrofitInstance.api.searchChannel(
+                pageToken = page,
                 query = text
             )
         }
@@ -77,6 +74,9 @@ class ItemRepository {
         if (response.isSuccessful) {
             val videoResponse = response.body()
             val mediaItemList = mutableListOf<MediaItem>()
+
+            val nextpage = videoResponse?.nextPageToken
+            Log.d("nextpage", nextpage.toString())
 
             videoResponse?.items?.forEach { items ->
                 // 날짜 변환
@@ -97,6 +97,7 @@ class ItemRepository {
                             thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                             isFavorite = false,
                             channelId = items.snippet?.channelId ?: "",
+                            nextPage = nextpage ?: ""
                         )
                         mediaItemList.add(item)
                     }
@@ -109,6 +110,7 @@ class ItemRepository {
                             datetime = date,
                             thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                             isFavorite = false,
+                            nextPage = nextpage ?: ""
                         )
                         mediaItemList.add(item)
                     }
@@ -123,7 +125,7 @@ class ItemRepository {
             if (response.code() == 403 || response.code() == 429) {
                 Toast.makeText(
                     MainActivity.getContext(),
-                    "API 호출 제한 오류! 나중에 다시 시도해주세요.",
+                    "API 호출 제한 오류! 나중에 다시 시도해주세요. ${response.code()}",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -167,6 +169,7 @@ class ItemRepository {
                     thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                     isFavorite = false,
                     channelId = items.snippet?.channelId ?: "",
+                    nextPage = ""
                 )
                 mediaItemList.add(item)
             }
@@ -229,6 +232,7 @@ class ItemRepository {
                     datetime = date,
                     thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                     isFavorite = false,
+                    nextPage = ""
                 )
             }
 
@@ -264,6 +268,7 @@ class ItemRepository {
                     thumbnail = items.snippet?.thumbnails?.default?.url ?: "",
                     isFavorite = false,
                     channelId = items.snippet?.channelId ?: "",
+                    nextPage = ""
                 )
 
                 mediaItemList.add(item)

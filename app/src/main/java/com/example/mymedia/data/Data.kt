@@ -90,6 +90,7 @@ object Data {
             randomDatetime,
             randomThumbnail,
             randomIsFavorite,
+            "",
             ""
         )
     }
@@ -108,7 +109,8 @@ object Data {
             randomUrl,
             randomDatetime,
             randomThumbnail,
-            randomIsFavorite
+            randomIsFavorite,
+            ""
         )
     }
 }
