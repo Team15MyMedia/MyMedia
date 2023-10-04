@@ -49,7 +49,7 @@ class SearchResultVideoRVAdapter : ListAdapter<VideoItem, SearchResultVideoRVAda
         fun bind(videoItem: VideoItem) = with(binding) {
 
             Glide.with(root.context)
-                .load(videoItem.thumbnail)
+                .load(videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg"))
                 .into(ivVideos)
 
             itemView.setOnClickListener {

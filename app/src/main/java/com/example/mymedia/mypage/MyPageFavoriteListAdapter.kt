@@ -60,7 +60,7 @@ class MyPageFavoriteListAdapter : ListAdapter<VideoItem, MyPageFavoriteListAdapt
             with(binding) {
                 // 이미지 설정
                 Glide.with(itemView.context)
-                    .load(videoItem.thumbnail)
+                    .load(videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg"))
                     .into(favoriteImageView)
                 favoriteImageView.clipToOutline = true
 

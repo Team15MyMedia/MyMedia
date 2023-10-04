@@ -190,6 +190,14 @@ class HomeFragment : Fragment() {
             }
         })
 
+        mostListAdapter.setOnItemClickListener(object :
+            HomeMostViewListAdapter.OnItemClickListener {
+            override fun onItemClick(videoItem: VideoItem) {
+                // 롱클릭 이벤트 처리
+                homeViewModel.showDetail(videoItem, requireContext())
+            }
+        })
+
         // test
         bannerListAdapter.setOnItemLongClickListener(object :
             HomeBannerListAdapter.OnItemLongClickListener {

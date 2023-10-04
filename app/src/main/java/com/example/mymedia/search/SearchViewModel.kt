@@ -98,7 +98,7 @@ class SearchViewModel(
                     if (itemList.isNullOrEmpty()) {
                         Toast.makeText(
                             MainActivity.getContext(),
-                            "채널 검색 결과가 없습니다!",
+                            "채널 검색 결과가 없습니다!!",
                             Toast.LENGTH_SHORT
                         ).show()
                         itemList = mutableListOf()
@@ -115,7 +115,7 @@ class SearchViewModel(
 
     fun showDetail(videoItem: VideoItem, context: Context) {
         val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra("videoThumbnail", videoItem.thumbnail)
+        intent.putExtra("videoThumbnail", videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg"))
         intent.putExtra("videoTitle", videoItem.title)
         intent.putExtra("videoDescription", videoItem.description)
         context.startActivity(intent)
