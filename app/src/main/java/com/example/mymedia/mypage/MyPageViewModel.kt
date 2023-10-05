@@ -1,20 +1,14 @@
 package com.example.mymedia.mypage
 
-import android.content.Context
-import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
-import com.example.mymedia.detail.DetailActivity
 import com.example.mymedia.main.ContextProvider
-import com.example.mymedia.main.MainSharedViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.Date
 
 class MyPageViewModel(
     private val repository: ItemRepository,
@@ -31,14 +25,11 @@ class MyPageViewModel(
 
     init {
         _favoriteVideo.value = loadDeviceData()
-        Log.d("loadData", loadDeviceData().toString())
     }
 
     fun saveDeviceData(list: MutableList<VideoItem>) {
         val gson = Gson()
         val listAsJson = gson.toJson(list)
-
-        Log.d("savelist", listAsJson)
 
         val sharedPreferences = contextProvider.getSharedPreferences()
         val editor = sharedPreferences.edit()

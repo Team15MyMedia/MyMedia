@@ -3,7 +3,6 @@ package com.example.mymedia.mypage
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -115,7 +114,6 @@ class MyPageFragment() : Fragment() {
     private fun initModel() = with(binding) {
         // 주석 예정
         myPageViewModel.favoriteVideo.observe(viewLifecycleOwner) {
-            Log.d("video", it.toString())
             favoriteListAdapter.submitList(it.toMutableList())
         }
         myPageViewModel.mainEvent.observe(viewLifecycleOwner) { event ->

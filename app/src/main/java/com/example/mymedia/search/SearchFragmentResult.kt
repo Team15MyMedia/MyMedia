@@ -3,7 +3,6 @@ package com.example.mymedia.search
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -156,11 +155,7 @@ class SearchFragmentResult() : Fragment() {
                 visibleItemCount = gridmanager.childCount
                 totalItemCount = gridmanager.itemCount
 
-                Log.d("visibleItemCount", visibleItemCount.toString())
-                Log.d("totalItemCount", totalItemCount.toString())
-
                 val firstVisibleItemPosition = gridmanager.findFirstVisibleItemPosition()
-                Log.d("firstVisibleItem", firstVisibleItemPosition.toString())
 
                 //현재 화면에 아이템이 보이는지 여부를 확인
                 if (firstVisibleItemPosition != RecyclerView.NO_POSITION) {
