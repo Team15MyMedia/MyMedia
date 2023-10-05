@@ -50,7 +50,7 @@
             motion:layout_constraintTop_toTopOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
-            motion:transitionEasing="cubic(0.8,0.41,0.39,0)" />
+            motion:transitionEasing="cubic(0.52,0,0.5,0)" />
         <Constraint
             android:id="@+id/imageView_full_logo"
             motion:layout_constraintEnd_toEndOf="parent"
