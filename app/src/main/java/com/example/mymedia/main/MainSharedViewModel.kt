@@ -55,3 +55,4 @@ sealed interface MainEventForDetail {
         val items: MutableList<VideoItem>
     ) : MainEventForMyPage
 }
+

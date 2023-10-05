@@ -1,23 +1,14 @@
 package com.example.mymedia.search
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mymedia.R
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.databinding.FragmentSearchBinding
-import com.example.mymedia.databinding.FragmentSearchResultBinding
-import com.example.mymedia.home.HomeViewModel
-import com.example.mymedia.home.SearchViewModelFactory
 
 
 class SearchFragment : Fragment() {
@@ -36,7 +27,7 @@ class SearchFragment : Fragment() {
 
     private val searchViewModel by lazy {
         ViewModelProvider(
-            requireActivity(), SearchViewModelFactory2(ItemRepository())
+            requireActivity(), SearchViewModelFactory(ItemRepository())
         )[SearchViewModel::class.java]
     }
 

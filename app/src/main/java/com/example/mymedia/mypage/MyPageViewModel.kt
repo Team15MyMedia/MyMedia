@@ -1,18 +1,18 @@
 package com.example.mymedia.mypage
 
-import android.content.Context
-import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
-import com.example.mymedia.detail.DetailActivity
-import java.util.Date
+import com.example.mymedia.main.ContextProvider
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class MyPageViewModel(
     private val repository: ItemRepository,
+    private val contextProvider: ContextProvider
 ) : ViewModel() {
 
     private val _favoriteVideo = MutableLiveData<MutableList<VideoItem>>()
@@ -24,30 +24,27 @@ class MyPageViewModel(
         get() = _mainEvent
 
     init {
-        // test
-        _favoriteVideo.value = mutableListOf(
-            VideoItem(
-                id = "HLnTVgdP_g0",
-                title = "이집트 홍해 한달살기가 최고인 이유 【이집트4】",
-                description = "이유는 저도 모름ㅋ",
-                datetime = Date(), // 임의의 날짜 값
-                thumbnail = "https://example.com/thumbnail.jpg", // 임의의 이미지 URL
-                isFavorite = true,
-                nextPage = "https://example.com/nextpage", // 임의의 다음 페이지 URL
-                channelId = "UC1234567890" // 임의의 채널 ID
-            )
-        )
+        _favoriteVideo.value = loadDeviceData()
     }
 
-    fun showDetail(videoItem: VideoItem, context: Context) {
-        val intent = Intent(context, DetailActivity::class.java)
-        intent.putExtra(
-            "videoThumbnail",
-            videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg")
-        )
-        intent.putExtra("videoTitle", videoItem.title)
-        intent.putExtra("videoDescription", videoItem.description)
-        context.startActivity(intent)
+    fun saveDeviceData(list: MutableList<VideoItem>) {
+        val gson = Gson()
+        val listAsJson = gson.toJson(list)
+
+        val sharedPreferences = contextProvider.getSharedPreferences()
+        val editor = sharedPreferences.edit()
+        editor.putString("favorite", listAsJson)
+        editor.apply()
+    }
+
+    fun loadDeviceData(): MutableList<VideoItem> {
+        val sharedPreferences = contextProvider.getSharedPreferences()
+        val list = sharedPreferences.getString("favorite", "") ?: ""
+
+        val gson = Gson()
+        val itemType = object : TypeToken<MutableList<VideoItem>>() {}.type
+
+        return gson.fromJson(list, itemType) ?: mutableListOf()
     }
 
     fun checkIsFavorite(item: VideoItem) {
@@ -76,6 +73,7 @@ class MyPageViewModel(
         }
 
         _favoriteVideo.value = curList
+        saveDeviceData(curList)
     }
 }
 
@@ -87,10 +85,11 @@ sealed interface EventForMain {
 
 class MyPageViewModelFactory(
     private val repository: ItemRepository,
+    private val contextProvider: ContextProvider,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MyPageViewModel::class.java)) {
-            return MyPageViewModel(repository) as T
+            return MyPageViewModel(repository, contextProvider) as T
         } else {
             throw IllegalArgumentException("Not found ViewModel class.")
         }

@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.mymedia.data.ChannelItem
-import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.RvChannelItemBinding
-import com.example.mymedia.databinding.RvVideosItemBinding
 
 class SearchResultChannelRVAdapter : ListAdapter<ChannelItem, SearchResultChannelRVAdapter.ViewHolder>(
     object : DiffUtil.ItemCallback<ChannelItem>(){

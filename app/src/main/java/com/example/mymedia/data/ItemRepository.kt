@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mymedia.main.MainActivity
 import com.example.mymedia.search.SearchFragment
 import com.example.mymedia.search.SearchViewModel
-import com.example.mymedia.search.SearchViewModelFactory2
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date

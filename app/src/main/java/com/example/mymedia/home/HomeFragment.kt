@@ -246,7 +246,12 @@ class HomeFragment : Fragment() {
         categoryVideoListAdapter.setOnItemClickListener(object :
             HomeCategoryVideoListAdapter.OnItemClickListener {
             override fun onItemClick(videoItem: VideoItem) {
-                showDetail(videoItem)
+                mainSharedViewModel.isFavorite(videoItem)
+                if (mainSharedViewModel.selItem != null) {
+                    showDetail(videoItem.copy(isFavorite = true))
+                } else {
+                    showDetail(videoItem)
+                }
             }
         })
     }

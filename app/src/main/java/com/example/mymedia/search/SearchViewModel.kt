@@ -2,7 +2,6 @@ package com.example.mymedia.search
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,7 +14,6 @@ import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.MediaItem
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.detail.DetailActivity
-import com.example.mymedia.home.HomeViewModel
 import com.example.mymedia.main.MainActivity
 import kotlinx.coroutines.launch
 
@@ -82,7 +80,7 @@ class SearchViewModel(
                     if (itemList.isNullOrEmpty()) {
                         Toast.makeText(
                             MainActivity.getContext(),
-                            "비디오 검색 결과가 없습니다!!",
+                            "비디오 검색 결과가 없습니다!",
                             Toast.LENGTH_SHORT
                         ).show()
                         itemList = mutableListOf()
@@ -95,7 +93,10 @@ class SearchViewModel(
                     list.addAll(emptyList)
                 }
                 isVideoSearchFinished = true
-                checkSearchCompletion()
+                if (isVideoSearchFinished) {
+                    _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
+                    _isLoading.value = false
+                }
             }
         }
     }
@@ -124,7 +125,10 @@ class SearchViewModel(
                     channelList.addAll(emptyList)
                 }
                 isChannelSearchFinished = true
-                checkSearchChannelCompletion()
+                if (isChannelSearchFinished) {
+                    _searchChannel.value = channelList.filterIsInstance<ChannelItem>().toMutableList()
+                    _isLoading.value = false
+                }
             }
         }
     }
@@ -141,42 +145,22 @@ class SearchViewModel(
     fun doSearch(text: String) {
 
         _isLoading.value = true
-
         isVideoSearchFinished = false
-        isChannelSearchFinished = false
 
-        Log.d("curPage", curPageCnt)
         searchVideo(text, curPageCnt)
     }
 
     fun doChannelSearch(text: String) {
 
         _isLoading.value = true
-
         isChannelSearchFinished = false
 
-        Log.d("curPage", curPageCnt)
         searchChannel(text, curPageCnt)
-    }
-
-    private fun checkSearchCompletion() {
-        if (isVideoSearchFinished) {
-            Log.d("searchvideo", list.filterIsInstance<VideoItem>().toMutableList().toString())
-            _searchvideo.value = list.filterIsInstance<VideoItem>().toMutableList()
-            _isLoading.value = false
-        }
-    }
-
-    private fun checkSearchChannelCompletion() {
-        if (isChannelSearchFinished) {
-            _searchChannel.value = channelList.filterIsInstance<ChannelItem>().toMutableList()
-            _isLoading.value = false
-        }
     }
 
 }
 
-class SearchViewModelFactory2(
+class SearchViewModelFactory(
     private val repository: ItemRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
