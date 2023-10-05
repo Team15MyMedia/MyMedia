@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.mymedia.data.ChannelItem
-import com.example.mymedia.data.Data
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.MediaItem
 import com.example.mymedia.data.VideoItem
@@ -47,7 +46,7 @@ class SearchViewModel(
     var isChannelSearchFinished = false
 
     init {
-        _most.value = Data.getSearchData()
+        _most.value = mutableListOf()
     }
 
     fun searchMostVideo() {

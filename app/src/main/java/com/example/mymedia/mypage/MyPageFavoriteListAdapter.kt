@@ -27,15 +27,15 @@ class MyPageFavoriteListAdapter : ListAdapter<VideoItem, MyPageFavoriteListAdapt
     }) {
 
     // 롱클릭 리스너 인터페이스 정의
-    interface OnItemLongClickListener {
-        fun onItemLongClick(videoItem: VideoItem)
+    interface OnItemClickListener {
+        fun onItemClick(videoItem: VideoItem)
     }
 
-    private var onItemLongClickListener: OnItemLongClickListener? = null
+    private var onItemClickListener: OnItemClickListener? = null
 
     // 롱클릭 리스너 설정 메서드
-    fun setOnItemLongClickListener(listener: OnItemLongClickListener) {
-        this.onItemLongClickListener = listener
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.onItemClickListener = listener
     }
 
     override fun onCreateViewHolder(
@@ -66,9 +66,8 @@ class MyPageFavoriteListAdapter : ListAdapter<VideoItem, MyPageFavoriteListAdapt
 
                 favoriteTitleTextView.text = videoItem.title
 
-                itemView.setOnLongClickListener {
-                    onItemLongClickListener?.onItemLongClick(videoItem)
-                    true
+                itemView.setOnClickListener {
+                    onItemClickListener?.onItemClick(videoItem)
                 }
             }
         }

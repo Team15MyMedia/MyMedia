@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,11 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.mymedia.data.Category
 import com.example.mymedia.data.ChannelItem
-import com.example.mymedia.data.Data
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.MediaItem
 import com.example.mymedia.data.VideoItem
-import com.example.mymedia.detail.DetailActivity
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -51,11 +48,7 @@ class HomeViewModel(
         get() = _curCategory
 
     init {
-        _categoryVideo.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
-        _categoryChannel.value = Data.getMediaData().filterIsInstance<ChannelItem>().toMutableList()
         _curCategory.value = 0
-
-        _mostLive.value = Data.getMediaData().filterIsInstance<VideoItem>().toMutableList()
 
         if (!apiSavingMode) {
             getCategoryList()
