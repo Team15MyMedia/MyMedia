@@ -17,27 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/userIconImageView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="15sp"
-        android:src="@drawable/ic_face"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/usernameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12sp"
-        android:text="사용자 이름"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/userIconImageView"
-        app:layout_constraintTop_toTopOf="@+id/userIconImageView" />
-
-<!--    <TextView-->
+    <!--    <TextView-->
 <!--        android:id="@+id/descriptionTextView"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->

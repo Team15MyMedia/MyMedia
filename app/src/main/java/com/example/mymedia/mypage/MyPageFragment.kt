@@ -98,9 +98,9 @@ class MyPageFragment() : Fragment() {
         favoritesRecyclerView.adapter = favoriteListAdapter
 
 
-        favoriteListAdapter.setOnItemLongClickListener(object :
-            MyPageFavoriteListAdapter.OnItemLongClickListener {
-            override fun onItemLongClick(videoItem: VideoItem) {
+        favoriteListAdapter.setOnItemClickListener(object :
+            MyPageFavoriteListAdapter.OnItemClickListener {
+            override fun onItemClick(videoItem: VideoItem) {
                 mainSharedViewModel.isFavorite(videoItem)
                 if (mainSharedViewModel.selItem != null) {
                     showDetail(videoItem.copy(isFavorite = true))
