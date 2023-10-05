@@ -1,17 +1,18 @@
 package com.example.mymedia.home
 
 import android.R
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +29,8 @@ import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
 import com.example.mymedia.home.adapter.HomeMostViewListAdapter
 import com.example.mymedia.main.MainSharedViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class HomeFragment : Fragment() {
@@ -35,6 +38,37 @@ class HomeFragment : Fragment() {
     companion object {
         fun newInstance() = HomeFragment()
     }
+
+    private val detailActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                val videoId = data?.getStringExtra("id") ?: ""
+                val videoTitle = data?.getStringExtra("title") ?: ""
+                val videoDescription = data?.getStringExtra("description") ?: ""
+                val dateString = data?.getStringExtra("datetime") ?: ""
+                val videoThumbnail = data?.getStringExtra("thumbnail") ?: ""
+                val isFavorite = data?.getBooleanExtra("isFavorite", false) ?: false
+                val videoNextPage = data?.getStringExtra("nextPage") ?: ""
+                val videoChannelId = data?.getStringExtra("channelId") ?: ""
+
+                val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+
+                val videoDatetime = stringToDate(dateString, dateFormat) ?: Date()
+
+                val item = VideoItem(
+                    videoId,
+                    videoTitle,
+                    videoDescription,
+                    videoDatetime,
+                    videoThumbnail,
+                    isFavorite,
+                    videoNextPage,
+                    videoChannelId
+                )
+                mainSharedViewModel.updateData(item)
+            }
+        }
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -199,7 +233,8 @@ class HomeFragment : Fragment() {
         mostListAdapter.setOnItemClickListener(object :
             HomeMostViewListAdapter.OnItemClickListener {
             override fun onItemClick(videoItem: VideoItem) {
-                if (mainSharedViewModel.getIsFavorite(videoItem)) {
+                mainSharedViewModel.isFavorite(videoItem)
+                if (mainSharedViewModel.selItem != null) {
                     showDetail(videoItem.copy(isFavorite = true))
                 } else {
                     showDetail(videoItem)
@@ -228,7 +263,6 @@ class HomeFragment : Fragment() {
         }
         homeViewModel.most.observe(viewLifecycleOwner) { itemList ->
             mostListAdapter.submitList(itemList.toMutableList())
-            Log.d("check", itemList[0].toString())
         }
         homeViewModel.categoryList.observe(viewLifecycleOwner) { itemList ->
             setSpinner(itemList.map { it.title }.toTypedArray())
@@ -298,8 +332,22 @@ class HomeFragment : Fragment() {
         intent.putExtra("videoTitle", videoItem.title)
         intent.putExtra("videoDescription", videoItem.description)
         intent.putExtra("isFavorite", videoItem.isFavorite)
+        intent.putExtra("videoId", videoItem.id)
+        intent.putExtra("videoDatetime", videoItem.datetime)
+        intent.putExtra("videoNextPage", videoItem.nextPage)
+        intent.putExtra("videoChannelId", videoItem.channelId)
 
-        startActivity(intent)
+        detailActivityResultLauncher.launch(intent)
+    }
+
+    private fun stringToDate(dateString: String, dateFormat: String): Date? {
+        return try {
+            val sdf = SimpleDateFormat(dateFormat)
+            sdf.parse(dateString)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     override fun onDestroyView() {

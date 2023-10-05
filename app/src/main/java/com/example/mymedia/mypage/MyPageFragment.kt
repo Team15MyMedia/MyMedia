@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentMypageBinding
+import com.example.mymedia.main.MainEventForDetail
+import com.example.mymedia.main.MainEventForMyPage
 import com.example.mymedia.main.MainSharedViewModel
 
 
@@ -70,9 +72,40 @@ class MyPageFragment : Fragment() {
         myPageViewModel.favoriteVideo.observe(viewLifecycleOwner) {
             favoriteListAdapter.submitList(it.toMutableList())
         }
-        mainSharedViewModel.favoriteList.observe(viewLifecycleOwner) {
-            favoriteListAdapter.submitList(it.toMutableList())
+        myPageViewModel.mainEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is EventForMain.CheckedItem -> {
+                    mainSharedViewModel.checkVideo(event.item)
+                }
+            }
         }
+
+        // mainViewModel 옵저빙
+        mainSharedViewModel.myPageEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is MainEventForMyPage.AddMyPageItem -> {
+
+                }
+
+                is MainEventForMyPage.CheckMyPageItem -> {
+                    myPageViewModel.checkIsFavorite(event.item)
+                }
+
+                is MainEventForMyPage.RemoveMyPageItem -> {
+
+                }
+
+                is MainEventForDetail.CheckDetailItem -> {
+
+                }
+
+                is MainEventForMyPage.UpdateMyPageItem -> {
+                    myPageViewModel.updateItem(event.item)
+                }
+            }
+//            favoriteListAdapter.submitList(it.toMutableList())
+        }
+
     }
 
     override fun onDestroyView() {
