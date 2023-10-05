@@ -75,7 +75,7 @@ class HomeViewModel(
                     val itemList = responseVideo.body() ?: mutableListOf()
                     list.addAll(itemList)
                 } else {
-                    // null일 시 공백 리스트 생성
+                    // null일 시 공백 리스트 생성입니다.
                     _most.value = mutableListOf()
                 }
                 _most.value = list.filterIsInstance<VideoItem>().toMutableList()

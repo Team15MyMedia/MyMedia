@@ -7,7 +7,7 @@ import android.os.Handler
 import com.example.mymedia.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {
-    private val SPLASH_DURATION: Long = 3000 // 3초 동안 스플래시 화면 표시
+    private val SPLASH_DURATION: Long = 4500 // 3초 동안 스플래시 화면 표시
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
