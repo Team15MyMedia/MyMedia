@@ -47,6 +47,8 @@ class SearchViewModel(
 
     init {
         _most.value = mutableListOf()
+        _searchvideo.value = mutableListOf()
+        _searchChannel.value = mutableListOf()
     }
 
     fun searchMostVideo() {
@@ -84,7 +86,11 @@ class SearchViewModel(
                         ).show()
                         itemList = mutableListOf()
                     }
-                    curPageCnt = itemList[itemList.size -1].nextPage
+                    if(itemList.size != 0){
+                        curPageCnt = itemList[itemList.size -1].nextPage
+                    }else{
+                        curPageCnt = ""
+                    }
                     list.addAll(itemList)
                 } else {
                     // null일 시 공백 리스트 생성
@@ -117,7 +123,11 @@ class SearchViewModel(
                         ).show()
                         itemList = mutableListOf()
                     }
-                    curPageCnt = itemList[itemList.size -1].nextPage
+                    if(itemList.size != 0){
+                        curPageCnt = itemList[itemList.size -1].nextPage
+                    }else{
+                        curPageCnt = ""
+                    }
                     channelList.addAll(itemList)
                 } else {
                     val emptyList: MutableList<MediaItem> = mutableListOf()
