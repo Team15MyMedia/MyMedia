@@ -1,16 +1,18 @@
 package com.example.mymedia.home
 
 import android.R
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,10 +23,14 @@ import com.example.mymedia.data.Category
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentHomeBinding
+import com.example.mymedia.detail.DetailActivity
 import com.example.mymedia.home.adapter.HomeBannerListAdapter
 import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
 import com.example.mymedia.home.adapter.HomeChannelListAdapter
 import com.example.mymedia.home.adapter.HomeMostViewListAdapter
+import com.example.mymedia.main.MainSharedViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
 
 
 class HomeFragment : Fragment() {
@@ -32,6 +38,37 @@ class HomeFragment : Fragment() {
     companion object {
         fun newInstance() = HomeFragment()
     }
+
+    private val detailActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                val videoId = data?.getStringExtra("id") ?: ""
+                val videoTitle = data?.getStringExtra("title") ?: ""
+                val videoDescription = data?.getStringExtra("description") ?: ""
+                val dateString = data?.getStringExtra("datetime") ?: ""
+                val videoThumbnail = data?.getStringExtra("thumbnail") ?: ""
+                val isFavorite = data?.getBooleanExtra("isFavorite", false) ?: false
+                val videoNextPage = data?.getStringExtra("nextPage") ?: ""
+                val videoChannelId = data?.getStringExtra("channelId") ?: ""
+
+                val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+
+                val videoDatetime = stringToDate(dateString, dateFormat) ?: Date()
+
+                val item = VideoItem(
+                    videoId,
+                    videoTitle,
+                    videoDescription,
+                    videoDatetime,
+                    videoThumbnail,
+                    isFavorite,
+                    videoNextPage,
+                    videoChannelId
+                )
+                mainSharedViewModel.updateData(item)
+            }
+        }
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -50,6 +87,10 @@ class HomeFragment : Fragment() {
 
     private val bannerListAdapter by lazy {
         HomeBannerListAdapter()
+    }
+
+    private val mainSharedViewModel by lazy {
+        ViewModelProvider(requireActivity())[MainSharedViewModel::class.java]
     }
 
     private val homeViewModel by lazy {
@@ -71,7 +112,6 @@ class HomeFragment : Fragment() {
 
     // test 두 번째 값만 추출한 배열
     private val spinnerItems: Array<String> = categories.map { it.title }.toTypedArray()
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -181,29 +221,32 @@ class HomeFragment : Fragment() {
             homeViewModel.categoryList.value?.map { it.title }?.toTypedArray() ?: spinnerItems
         )
 
-        // 롱클릭 시
-        categoryVideoListAdapter.setOnItemClickListener(object :
-            HomeCategoryVideoListAdapter.OnItemClickListener {
-            override fun onItemClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
-                homeViewModel.showDetail(videoItem, requireContext())
-            }
-        })
-
-        mostListAdapter.setOnItemClickListener(object :
-            HomeMostViewListAdapter.OnItemClickListener {
-            override fun onItemClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
-                homeViewModel.showDetail(videoItem, requireContext())
-            }
-        })
-
-        // test
+        // 배너 롱클릭 시
         bannerListAdapter.setOnItemLongClickListener(object :
             HomeBannerListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
-                // 롱클릭 이벤트 처리
                 homeViewModel.showByYoutube(videoItem, requireContext())
+            }
+        })
+
+        // 가장 많이본 동영상 클릭 시
+        mostListAdapter.setOnItemClickListener(object :
+            HomeMostViewListAdapter.OnItemClickListener {
+            override fun onItemClick(videoItem: VideoItem) {
+                mainSharedViewModel.isFavorite(videoItem)
+                if (mainSharedViewModel.selItem != null) {
+                    showDetail(videoItem.copy(isFavorite = true))
+                } else {
+                    showDetail(videoItem)
+                }
+            }
+        })
+
+        // 카테고리 동영상 클릭 시
+        categoryVideoListAdapter.setOnItemClickListener(object :
+            HomeCategoryVideoListAdapter.OnItemClickListener {
+            override fun onItemClick(videoItem: VideoItem) {
+                showDetail(videoItem)
             }
         })
     }
@@ -277,6 +320,34 @@ class HomeFragment : Fragment() {
 
         // 초기 선택값 설정
         spinner.setSelection(homeViewModel.curCategory.value ?: 0)
+    }
+
+    fun showDetail(videoItem: VideoItem) {
+        val intent = Intent(context, DetailActivity::class.java)
+
+        intent.putExtra(
+            "videoThumbnail",
+            videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg")
+        )
+        intent.putExtra("videoTitle", videoItem.title)
+        intent.putExtra("videoDescription", videoItem.description)
+        intent.putExtra("isFavorite", videoItem.isFavorite)
+        intent.putExtra("videoId", videoItem.id)
+        intent.putExtra("videoDatetime", videoItem.datetime)
+        intent.putExtra("videoNextPage", videoItem.nextPage)
+        intent.putExtra("videoChannelId", videoItem.channelId)
+
+        detailActivityResultLauncher.launch(intent)
+    }
+
+    private fun stringToDate(dateString: String, dateFormat: String): Date? {
+        return try {
+            val sdf = SimpleDateFormat(dateFormat)
+            sdf.parse(dateString)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     override fun onDestroyView() {

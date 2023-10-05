@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
-import com.example.mymedia.databinding.FragmentHomeBinding
 import com.example.mymedia.databinding.FragmentMypageBinding
-import com.example.mymedia.home.HomeViewModel
-import com.example.mymedia.home.SearchViewModelFactory
-import com.example.mymedia.home.adapter.HomeCategoryVideoListAdapter
+import com.example.mymedia.main.MainEventForDetail
+import com.example.mymedia.main.MainEventForMyPage
+import com.example.mymedia.main.MainSharedViewModel
 
 
 class MyPageFragment : Fragment() {
@@ -25,9 +25,11 @@ class MyPageFragment : Fragment() {
     private var _binding: FragmentMypageBinding? = null
     private val binding get() = _binding!!
 
-    private val categoryVideoListAdapter by lazy {
+    private val favoriteListAdapter by lazy {
         MyPageFavoriteListAdapter()
     }
+
+    private val mainSharedViewModel: MainSharedViewModel by activityViewModels()
 
     private val myPageViewModel by lazy {
         ViewModelProvider(
@@ -54,9 +56,9 @@ class MyPageFragment : Fragment() {
         val spanCount = 2 // 가로당 아이템 수
         val layoutManager = GridLayoutManager(requireContext(), spanCount)
         favoritesRecyclerView.layoutManager = layoutManager
-        favoritesRecyclerView.adapter = categoryVideoListAdapter
+        favoritesRecyclerView.adapter = favoriteListAdapter
 
-        categoryVideoListAdapter.setOnItemLongClickListener(object :
+        favoriteListAdapter.setOnItemLongClickListener(object :
             MyPageFavoriteListAdapter.OnItemLongClickListener {
             override fun onItemLongClick(videoItem: VideoItem) {
                 // 롱클릭 이벤트 처리
@@ -66,9 +68,44 @@ class MyPageFragment : Fragment() {
     }
 
     private fun initModel() = with(binding) {
+        // 주석 예정
         myPageViewModel.favoriteVideo.observe(viewLifecycleOwner) {
-            categoryVideoListAdapter.submitList(it.toMutableList())
+            favoriteListAdapter.submitList(it.toMutableList())
         }
+        myPageViewModel.mainEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is EventForMain.CheckedItem -> {
+                    mainSharedViewModel.checkVideo(event.item)
+                }
+            }
+        }
+
+        // mainViewModel 옵저빙
+        mainSharedViewModel.myPageEvent.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is MainEventForMyPage.AddMyPageItem -> {
+
+                }
+
+                is MainEventForMyPage.CheckMyPageItem -> {
+                    myPageViewModel.checkIsFavorite(event.item)
+                }
+
+                is MainEventForMyPage.RemoveMyPageItem -> {
+
+                }
+
+                is MainEventForDetail.CheckDetailItem -> {
+
+                }
+
+                is MainEventForMyPage.UpdateMyPageItem -> {
+                    myPageViewModel.updateItem(event.item)
+                }
+            }
+//            favoriteListAdapter.submitList(it.toMutableList())
+        }
+
     }
 
     override fun onDestroyView() {
