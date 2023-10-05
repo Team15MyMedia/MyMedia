@@ -1,5 +1,8 @@
 package com.example.mymedia.data
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import java.io.Serializable
 import java.util.Date
 
 sealed class MediaItem {

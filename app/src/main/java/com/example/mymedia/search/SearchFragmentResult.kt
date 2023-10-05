@@ -1,16 +1,25 @@
 package com.example.mymedia.search
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.mymedia.data.ItemRepository
 import com.example.mymedia.data.VideoItem
 import com.example.mymedia.databinding.FragmentSearchResultBinding
+import com.example.mymedia.detail.DetailActivity
+import com.example.mymedia.main.MainSharedViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class SearchFragmentResult() : Fragment() {
 
@@ -32,11 +41,46 @@ class SearchFragmentResult() : Fragment() {
 
     private val searchViewModel by lazy {
         ViewModelProvider(
-            requireActivity(), SearchViewModelFactory2(ItemRepository())
+            requireActivity(), SearchViewModelFactory(ItemRepository())
         )[SearchViewModel::class.java]
     }
 
-    private lateinit var gridmanager: StaggeredGridLayoutManager
+    private val mainSharedViewModel by lazy {
+        ViewModelProvider(requireActivity())[MainSharedViewModel::class.java]
+    }
+
+    private val detailActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                val videoId = data?.getStringExtra("id") ?: ""
+                val videoTitle = data?.getStringExtra("title") ?: ""
+                val videoDescription = data?.getStringExtra("description") ?: ""
+                val dateString = data?.getStringExtra("datetime") ?: ""
+                val videoThumbnail = data?.getStringExtra("thumbnail") ?: ""
+                val isFavorite = data?.getBooleanExtra("isFavorite", false) ?: false
+                val videoNextPage = data?.getStringExtra("nextPage") ?: ""
+                val videoChannelId = data?.getStringExtra("channelId") ?: ""
+
+                val dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+
+                val videoDatetime = stringToDate(dateString, dateFormat) ?: Date()
+
+                val item = VideoItem(
+                    videoId,
+                    videoTitle,
+                    videoDescription,
+                    videoDatetime,
+                    videoThumbnail,
+                    isFavorite,
+                    videoNextPage,
+                    videoChannelId
+                )
+                mainSharedViewModel.updateData(item)
+            }
+        }
+
+    private lateinit var gridmanager: GridLayoutManager
     private lateinit var channelGridmanager: StaggeredGridLayoutManager
     private var visibleItemCount = 0
     private var totalItemCount = 0
@@ -74,14 +118,21 @@ class SearchFragmentResult() : Fragment() {
 
         //videos recyclerview
         rvVideos.adapter = videosListAdapter
-        gridmanager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+        gridmanager = GridLayoutManager(requireContext(), 3)
         rvVideos.layoutManager = gridmanager
         rvVideos.addOnScrollListener(onScrollListener)
         rvVideos.itemAnimator = null
 
+
+
         videosListAdapter.setOnItemClickListener(object : SearchResultVideoRVAdapter.OnItemClickListener{
             override fun onItemClick(videoItem: VideoItem) {
-                searchViewModel.showDetail(videoItem, requireContext())
+                mainSharedViewModel.isFavorite(videoItem)
+                if (mainSharedViewModel.selItem != null) {
+                    showDetail(videoItem.copy(isFavorite = true))
+                } else {
+                    showDetail(videoItem)
+                }
             }
         })
 
@@ -105,15 +156,22 @@ class SearchFragmentResult() : Fragment() {
                 visibleItemCount = gridmanager.childCount
                 totalItemCount = gridmanager.itemCount
 
-                val firstVisibleItems = gridmanager.findFirstVisibleItemPositions(null)
-                if (firstVisibleItems.isNotEmpty()) {
-                    pastVisibleItems = firstVisibleItems[0]
+                Log.d("visibleItemCount", visibleItemCount.toString())
+                Log.d("totalItemCount", totalItemCount.toString())
+
+                val firstVisibleItemPosition = gridmanager.findFirstVisibleItemPosition()
+                Log.d("firstVisibleItem", firstVisibleItemPosition.toString())
+
+                //현재 화면에 아이템이 보이는지 여부를 확인
+                if (firstVisibleItemPosition != RecyclerView.NO_POSITION) {
+                    pastVisibleItems = firstVisibleItemPosition
                 }
 
                 if (loading && visibleItemCount + pastVisibleItems >= totalItemCount) {
                     loading = false
                     searchViewModel.doSearch(searchViewModel.searchText)
                 }
+
             }
         }
 
@@ -134,6 +192,34 @@ class SearchFragmentResult() : Fragment() {
                 }
             }
         }
+
+    fun showDetail(videoItem: VideoItem) {
+        val intent = Intent(context, DetailActivity::class.java)
+
+        intent.putExtra(
+            "videoThumbnail",
+            videoItem.thumbnail.replace("/default.jpg", "/maxresdefault.jpg")
+        )
+        intent.putExtra("videoTitle", videoItem.title)
+        intent.putExtra("videoDescription", videoItem.description)
+        intent.putExtra("isFavorite", videoItem.isFavorite)
+        intent.putExtra("videoId", videoItem.id)
+        intent.putExtra("videoDatetime", videoItem.datetime)
+        intent.putExtra("videoNextPage", videoItem.nextPage)
+        intent.putExtra("videoChannelId", videoItem.channelId)
+
+        detailActivityResultLauncher.launch(intent)
+    }
+
+    private fun stringToDate(dateString: String, dateFormat: String): Date? {
+        return try {
+            val sdf = SimpleDateFormat(dateFormat)
+            sdf.parse(dateString)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
 
     override fun onDestroyView() {
         _binding = null

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -246,7 +247,12 @@ class HomeFragment : Fragment() {
         categoryVideoListAdapter.setOnItemClickListener(object :
             HomeCategoryVideoListAdapter.OnItemClickListener {
             override fun onItemClick(videoItem: VideoItem) {
-                showDetail(videoItem)
+                mainSharedViewModel.isFavorite(videoItem)
+                if (mainSharedViewModel.selItem != null) {
+                    showDetail(videoItem.copy(isFavorite = true))
+                } else {
+                    showDetail(videoItem)
+                }
             }
         })
     }

@@ -15,7 +15,7 @@ interface RetrofitApi {
         @Query("type") type: String = "video",
         @Query("part") part: String = "snippet",
         @Query("regionCode") regionCode: String = "KR",
-        @Query("maxResults") maxResults: Int = 8,
+        @Query("maxResults") maxResults: Int = 24,
     ): Response<ApiResponse<SearchItem>>
 
     @GET("videos")
@@ -35,7 +35,7 @@ interface RetrofitApi {
         @Query("type") type: String = "channel",
         @Query("part") part: String = "snippet",
         @Query("regionCode") regionCode: String = "KR",
-        @Query("maxResults") maxResults: Int = 8,
+        @Query("maxResults") maxResults: Int = 24,
     ): Response<ApiResponse<SearchItem>>
 
     @GET("search")
